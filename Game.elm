@@ -218,13 +218,30 @@ rotate characters = -- Moves the first element to the back of the array
             let tail = slice 1 (length characters |> (-) 1) in
             push first tail
 
+move : Direction -> Position -> Position
+move direction position =
+    case direction of
+        North -> { position | y <- position.y - 1 }
+        South -> { position | y <- position.y + 1 }
+        West  -> { position | x <- position.x - 1 }
+        East  -> { position | x <- position.x + 1 }
+
 resolveIntent : List Character -> World -> List Character
 resolveIntent characters world =
     let nextCharacter = get 0 characters in
     let intent = getIntentWithAI nextCharacter model in
-    -- TODO Damage enemies/check for leaving the world/etc
-    -- TODO Rotate self to back of queue
-    model
+    case intent of
+        Move direction ->
+            let intendedPosition = (move direction nextCharacter.position) in
+            let updatedCharacter = 
+                { nextCharacter | position <- -- TODO Check for collisions with other entities
+                    if isInWorld intendedPosition then intendedPosition else nextCharacter.position }
+            rotate (set 0 updatedCharacter characters)
+        Fire direction ->
+            -- TODO Damage nearest enemy in direction of fire
+            -- TODO Rotate self to back of queue
+            rotate characters
+        Wait -> rotate characters
 
 timeStep : Model -> Model
 timeStep model =
