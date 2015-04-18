@@ -39,6 +39,7 @@ type alias Team
     = Friendly 
     | Neutral 
     | Enemy
+
 type alias Weapon 
     = Unarmed 
     | Damage Int
