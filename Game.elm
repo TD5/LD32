@@ -116,7 +116,7 @@ initialBase pos =
         , health   = 50
         , weapon   = Unarmed
         , canMove  = False
-        , label    = "Here"
+        , label    = "Radar Facility"
         }
 
 initialCharacters : List Character
@@ -282,6 +282,7 @@ viewGameWorld model =
         let charSize = toFloat size / 100.0 in
         let charSizeTxt = toString charSize in
         let viewPos = positionToView pos in
+        let offsetLabel xy = ((fst xy) + 2 * charSize, (snd xy) - charSize) in
         [ Svg.rect
             [ Svg.Attributes.fill color
             , Svg.Attributes.width charSizeTxt
@@ -292,8 +293,8 @@ viewGameWorld model =
             []
         , Svg.text
             [ Svg.Attributes.fill color
-            , Svg.Attributes.x (viewPos |> fst |> toString)
-            , Svg.Attributes.y (viewPos |> snd |> toString)
+            , Svg.Attributes.x (viewPos |> offsetLabel |> fst |> toString)
+            , Svg.Attributes.y (viewPos |> offsetLabel |> snd |> toString)
             ]
             [ text label ]
         ]
