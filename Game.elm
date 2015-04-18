@@ -75,6 +75,7 @@ type alias ExecutingGame =
 
 type alias Model = -- The full state of the game at any point in time
     { program        : ProgramSource
+    , sourceError    : Maybe String -- A description of what's wrong with the source code
     , gameWorld      : World
     , executingGame  : Maybe ExecutingGame
     }
