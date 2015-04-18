@@ -130,7 +130,7 @@ initialExecutingGame =
 
 initialModel : Model
 initialModel =
-    { source         = "Some example program here"
+    { source         = ""
     , sourceError    = Nothing
     , gameWorld      = initialWorld
     , executingGame  = Nothing
@@ -226,7 +226,7 @@ viewTextEditor model =
           ]
           [ h3 
               [ class "panel-title"
-              , style [] 
+              , style []
               ]
               [ text "Source code" ]
           ]
@@ -238,6 +238,7 @@ viewTextEditor model =
             [ textarea
                 [ class "source"
                 , style [] 
+                , placeholder "Enter your source code here"
                 ]
                 [ text model.source ]
             , button
