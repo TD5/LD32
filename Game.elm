@@ -9,7 +9,7 @@ goal is to keep as many friendly units alive for as long as possible.
 - The unconventional weapon is the player's logical reasoning!
 -}
 
-import Arrays
+import Array
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
