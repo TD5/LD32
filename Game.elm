@@ -83,8 +83,8 @@ type alias Model = -- The full state of the game at any point in time
 
 initialWorld : World
 initialWorld = 
-    { width  : 25
-    , height : 25
+    { width  = 25
+    , height = 25
     }
 
 initialBasicEnemy : Position -> NPC
@@ -125,11 +125,11 @@ initialPlayer pos =
 
 emptyModel : Model
 emptyModel =
-    { program      : ""
-    , programState : []
-    , gameWorld    : initialWorld
-    , npcs         : initialNpcs
-    , player       : initialPlayer { x = 10, y = 8 } 
+    { program      = ""
+    , programState = []
+    , gameWorld    = initialWorld
+    , npcs         = initialNpcs
+    , player       = initialPlayer { x = 10, y = 8 } 
     }
 
 ---- UPDATE ----
