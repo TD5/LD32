@@ -45,7 +45,7 @@ type alias Weapon
     | Damage Int
 
 type alias World =  -- The origin is (0, 0) and it extends out to (width - 1, height - 1) in a rectangle
-    { width : Int
+    { width  : Int
     , height : Int 
     }
 
@@ -55,16 +55,16 @@ type alias Position = -- Coods in the world
     }
 
 type alias NPC = -- A character in the world that the player can't control 
-    { team : Team
+    { team     : Team
     , position : Position
-    , health : Health
-    , weapon : Weapon
-    , canMove : Bool 
+    , health   : Health
+    , weapon   : Weapon
+    , canMove  : Bool 
     }
 
 type alias Player =  -- The unit the player's program controls
     { position : Position
-    , health : Health 
+    , health   : Health 
     }
 
 type alias ExecutingGame =
@@ -114,7 +114,7 @@ initialNpcs =
     , initialBasicEnemy { x = 20, y = 5  }
     , initialBasicEnemy { x = 5,  y = 20 }
     , initialBasicEnemy { x = 20, y = 20 }
-    , initialBase { x = 12, y = 12 }
+    , initialBase       { x = 12, y = 12 }
     ]
 
 initialPlayer : Position -> Player
