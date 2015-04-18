@@ -301,10 +301,10 @@ viewGameWorld model =
     in
     let viewCharacter char =
         case char of
-            PlayerControlled e -> drawEntity e.position "#00ccb7" e.label
-            Good e -> drawEntity e.position "#00ccb7" e.label
-            Chaotic e -> drawEntity e.position "#ffa500" e.label
-            Evil e -> drawEntity e.position "#ff0013" e.label
+            PlayerControlled e -> drawEntity e.position "#0bd193" e.label
+            Good e -> drawEntity e.position "#149169" e.label
+            Chaotic e -> drawEntity e.position "#ffda34" e.label
+            Evil e -> drawEntity e.position "#ff2200" e.label
     in
     let characters =
         case model.executingGame of
@@ -313,7 +313,7 @@ viewGameWorld model =
     in
     let background =
         Svg.rect
-            [ Svg.Attributes.fill "#090C0C"
+            [ Svg.Attributes.fill "#000000"
             , Svg.Attributes.width sizeTxt
             , Svg.Attributes.height sizeTxt
             , Svg.Attributes.x "0"
