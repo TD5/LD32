@@ -75,7 +75,7 @@ type alias ExecutingGame =
     }
 
 type alias Model = -- The full state of the game at any point in time
-    { source        : ProgramSource
+    { source         : ProgramSource
     , sourceError    : Maybe String -- A description of what's wrong with the source code
     , gameWorld      : World
     , executingGame  : Maybe ExecutingGame
@@ -155,6 +155,17 @@ type Action
     -- Ronseal
     | NoOp
 
+type Direction
+    = North
+    | South
+    | East
+    | West
+
+type GameEntityAction
+    = Move Direction
+    | Fire Direction
+    | Wait
+
 isInWorld : World -> Position -> Bool
 isInWorld world pos =
        pos.x < world.width
@@ -162,13 +173,26 @@ isInWorld world pos =
     && pos.x >= 0
     && pos.y >= 0
 
+modifySource : ProgramSource -> Model -> Model
+modifySource newSource model =
+    -- TODO Syntax checking?
+    { model | source <- newSource }
+
+startBattle : Model -> Model
+startBattle model  =
+    { model | executingGame <- Just initialExecutingGame }
+
 update : Action -> Model -> Model
 update action model = -- TODO Implement - currently everything is a NoOp.
     case action of
-      ModifySource source -> model
-      StartBattle         -> model
-      TimeStep delta      -> model
-      NoOp                -> model
+        ModifySource newSource -> 
+            modifySource newSource model 
+        StartBattle -> 
+            startBattle model
+        TimeStep delta -> 
+            model
+        NoOp -> 
+            model
 
 ---- VIEW ----
 
@@ -191,8 +215,7 @@ viewTextEditor model =
         , div
             [ class "panel-body"
             , style 
-                [ ("height", "90%")
-                ]
+                [ ("height", "90%") ]
             ]
             [ textarea
                 [ class "source"
