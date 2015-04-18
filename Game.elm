@@ -177,7 +177,7 @@ type Direction
     | East
     | West
 
-type Intention -- Something that a character intends to do
+type Intent -- Something that a character intends to do
     = Move Direction
     | Fire Direction
     | Wait
@@ -198,25 +198,42 @@ startBattle : Model -> Model
 startBattle model  =
     { model | executingGame <- Just initialExecutingGame }
 
-updateWithAI : Character -> Model -> Intention
-updateWithAI char model =
+getIntentWithAI : Character -> Model -> Intent
+getIntentWithAI char model =
     -- TODO Add some basic AI here
     Wait
 
-updateWithProgram : Character -> Model -> Intention
-updateWithProgram char model =
+getIntentWithProgram : Character -> Model -> Intent
+getIntentWithProgram char model =
     -- TODO Interpret player's code to see what to do next
     Wait
+
+rotate : Array Character -> Array Character
+rotate characters = -- Moves the first element to the back of the array
+    case length of
+        0 -> characters
+        1 -> characters
+        _ -> 
+            let first = get 0 characters in
+            let tail = slice 1 (length characters) in
+            push first tail
+
+resolveIntent : List Character -> World -> List Character
+resolveIntent characters world =
+    let nextCharacter = get 0 characters in
+    let intent = getIntentWithAI nextCharacter model in
+    -- TODO Damage enemies/check for leaving the world/etc
+    -- TODO Rotate self to back of queue
+    model
 
 timeStep : Model -> Model
 timeStep model =
     case model.executingGame of
         Nothing -> model -- If the game isn't executing, we don't need to step
         Just executingGame ->
-            -- TODO Get the next unit's intent
-            -- TODO Resolve the intent (they might not achieve what they way, e.g. if they try to move off the world)
-            -- TODO Reorder characters
-            model
+            { model | executingGame <- initialExecutingGame }
+                --{ model.executingGame | characters <- 
+                --    resolveIntent model.characters model.gameWorld } }
 
 update : Action -> Model -> Model
 update action model =
