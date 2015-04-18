@@ -25,23 +25,55 @@ import Window
 
 ---- MODEL ----
 type alias ProgramSource = String
-type alias ProgramState = Array [ Int ] -- The player can only store an array of numbers between executions
 
-type alias Team = Friendly | Neutral | Enemy
-type alias World = { width : Int, height : Int } -- The origin is (0, 0) and it extends out to (width - 1, height - 1) in a rectangle
-type alias Position = { x : Int, y : Int } -- Coods in the world
+{-
+The player can store an array of numbers between executions of their code.
+I thought having just a list of numbers forces the user to intelligently
+encode any information that they want to keep.
+-}
+type alias ProgramMemory = Array [ Int ] 
+
 type alias Health = Int
-type alias Weapon = Unarmed | Damage Int
-type alias Unit = { team : Team, position : Position, health : Health, weapon : Weapon, canMove : Bool }
-type alias Player = { position : Position, health : Health } -- The unit the player's program controls
-type alias ExecutingGame = 
-    { programState : ProgramState
-    , npcs         : List Unit
-    , player       : Player
-    , score        : Maybe Int
+
+type alias Team 
+    = Friendly 
+    | Neutral 
+    | Enemy
+type alias Weapon 
+    = Unarmed 
+    | Damage Int
+
+type alias World =  -- The origin is (0, 0) and it extends out to (width - 1, height - 1) in a rectangle
+    { width : Int
+    , height : Int 
     }
 
-type alias Model =
+type alias Position = -- Coods in the world
+    { x : Int
+    , y : Int 
+    }
+
+type alias NPC = -- A character in the world that the player can't control 
+    { team : Team
+    , position : Position
+    , health : Health
+    , weapon : Weapon
+    , canMove : Bool 
+    }
+
+type alias Player =  -- The unit the player's program controls
+    { position : Position
+    , health : Health 
+    }
+
+type alias ExecutingGame =
+    { programMemory : ProgramMemory
+    , npcs          : List NPC
+    , player        : Player
+    , score         : Maybe Int
+    }
+
+type alias Model = -- The full state of the game at any point in time
     { program        : ProgramSource
     , gameWorld      : World
     , executingGame  : Maybe ExecutingGame
@@ -53,7 +85,7 @@ initialWorld =
     , height : 25
     }
 
-initialBasicEnemy : Position -> Unit
+initialBasicEnemy : Position -> NPC
 initialBasicEnemy pos =
     { team     = Enemy
     , position = pos
@@ -65,7 +97,7 @@ initialBasicEnemy pos =
 {-  
 A tough but unarmed, immobile friendly base that the player wants to protect
 -}
-initialBase : Position -> Unit
+initialBase : Position -> NPC
 initialBase pos =
     { team     = Friendly
     , position = pos
@@ -74,7 +106,7 @@ initialBase pos =
     , canMove  = False
     }
 
-initialNpcs : List Unit
+initialNpcs : List NPC
 initialNpcs =  
     [ initialBasicEnemy { x = 5,  y = 5  }
     , initialBasicEnemy { x = 20, y = 5  }
@@ -101,64 +133,22 @@ emptyModel =
 ---- UPDATE ----
 
 type Action
-    = NoOp
-    | UpdateField String
-    | EditingTask Int Bool
-    | UpdateTask Int String
-    | Add
-    | Delete Int
-    | DeleteComplete
-    | Check Int Bool
-    | CheckAll Bool
-    | ChangeVisibility String
+
+    -- User modifies their source code
+    = ModifySource String  
+
+    -- User starts the battle and their code executes
+    | StartBattle          
+
+    -- The wall clock ticks, driving our battle forward if the game has started
+    | TimeStep Float       
 
 update : Action -> Model -> Model
-update action model =
+update action model = -- TODO Implement - currently everything is a NoOp.
     case action of
-      NoOp -> model
-
-      Add ->
-          { model |
-              uid <- model.uid + 1,
-              field <- "",
-              tasks <-
-                  if String.isEmpty model.field
-                    then model.tasks
-                    else model.tasks ++ [newTask model.field model.uid]
-          }
-
-      UpdateField str ->
-          { model | field <- str }
-
-      EditingTask id isEditing ->
-          let updateTask t = if t.id == id then { t | editing <- isEditing } else t
-          in
-              { model | tasks <- List.map updateTask model.tasks }
-
-      UpdateTask id task ->
-          let updateTask t = if t.id == id then { t | description <- task } else t
-          in
-              { model | tasks <- List.map updateTask model.tasks }
-
-      Delete id ->
-          { model | tasks <- List.filter (\t -> t.id /= id) model.tasks }
-
-      DeleteComplete ->
-          { model | tasks <- List.filter (not << .completed) model.tasks }
-
-      Check id isCompleted ->
-          let updateTask t = if t.id == id then { t | completed <- isCompleted } else t
-          in
-              { model | tasks <- List.map updateTask model.tasks }
-
-      CheckAll isCompleted ->
-          let updateTask t = { t | completed <- isCompleted }
-          in
-              { model | tasks <- List.map updateTask model.tasks }
-
-      ChangeVisibility visibility ->
-          { model | visibility <- visibility }
-
+      ModifySource source -> model
+      StartBattle         -> model
+      TimeStep delta      -> model
 
 ---- VIEW ----
 
