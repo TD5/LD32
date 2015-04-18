@@ -174,7 +174,26 @@ update action model = -- TODO Implement - currently everything is a NoOp.
 
 viewTextEditor : Model -> Html
 viewTextEditor model =
-    text "Text Editor"
+    div
+        [ class "panel panel-default"
+        , style [] 
+        ]
+        [ div
+            [ class "panel-heading"
+            , style []
+          ]
+          [ h3 
+              [ class "panel-title"
+              , style [] 
+            ]
+            [ text "Source code" ]
+        , div
+            [ class "panel-body"
+            , style []
+            ]
+            [ text model.program ]
+          ]
+      ]
 
 viewGameWorld : Model -> Html
 viewGameWorld model =
@@ -183,21 +202,21 @@ viewGameWorld model =
 view : Model -> Html
 view model =
     div
-      [ class "container-fluid"
-      , style []
-      ]
-      [ div 
-        [ class "row"
-        , style [] 
-        ] 
+        [ class "container-fluid"
+        , style []
+        ]
         [ div 
-            [ class "col-md-6" ]
-            [ viewTextEditor model ]
-        , div
-            [ class "col-md-6" ]
-            [ viewGameWorld model ]
-        ] 
-      ]
+            [ class "row"
+            , style [] 
+            ] 
+            [ div 
+                [ class "col-md-6" ]
+                [ viewTextEditor model ]
+            , div
+                [ class "col-md-6" ]
+                [ viewGameWorld model ]
+            ] 
+        ]
 
 ---- INPUTS ----
 
