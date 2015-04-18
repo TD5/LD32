@@ -58,7 +58,8 @@ type alias Entity = -- An actor in the gameworld
     { position : Position
     , health   : Health
     , weapon   : Weapon
-    , canMove  : Bool 
+    , canMove  : Bool
+    , label    : String
     }
 
 type Character -- An entity with an alignment to a team
@@ -90,9 +91,19 @@ initialBasicEnemy : Position -> Character
 initialBasicEnemy pos =
     Evil
         { position = pos
-        , health   = 5
+        , health   = 6
+        , weapon   = Damage 2 
+        , canMove  = True
+        , label    = "Enemy Tank"
+        }
+initialBasicChaotic : Position -> Character
+initialBasicChaotic pos =
+    Evil
+        { position = pos
+        , health   = 2
         , weapon   = Damage 1 
         , canMove  = True
+        , label    = "Rogue Soldier"
         }
 
 {-  
@@ -105,16 +116,17 @@ initialBase pos =
         , health   = 50
         , weapon   = Unarmed
         , canMove  = False
+        , label    = "Here"
         }
 
 initialCharacters : List Character
 initialCharacters =
-    [ initialBasicEnemy { x = 5,  y = 5  }
-    , initialBasicEnemy { x = 20, y = 5  }
-    , initialBasicEnemy { x = 5,  y = 20 }
-    , initialBase       { x = 12, y = 12 }
-    , initialPlayer     { x = 10, y = 8  }
-    , initialBasicEnemy { x = 20, y = 20 }
+    [ initialBasicEnemy   { x = 5,  y = 5  }
+    , initialBasicEnemy   { x = 20, y = 5  }
+    , initialBasicEnemy   { x = 5,  y = 20 }
+    , initialBase         { x = 12, y = 12 }
+    , initialPlayer       { x = 10, y = 8  }
+    , initialBasicChaotic { x = 20, y = 20 }
     ]
 
 initialPlayer : Position -> Character
@@ -124,6 +136,7 @@ initialPlayer pos =
         , health   = 20
         , weapon   = Damage 2
         , canMove  = True
+        , label    = "Your Drone"
         }
 
 initialExecutingGame : ExecutingGame
@@ -265,7 +278,7 @@ viewGameWorld model =
         , (toFloat pos.y / toFloat model.gameWorld.height)*size
         )
     in
-    let drawEntity pos color =
+    let drawEntity pos color label =
         let charSize = toFloat size / 100.0 in
         let charSizeTxt = toString charSize in
         let viewPos = positionToView pos in
@@ -280,10 +293,10 @@ viewGameWorld model =
     in
     let viewCharacter char =
         case char of
-            PlayerControlled e -> drawEntity e.position "#106b57"
-            Good e -> drawEntity e.position "#30543f"
-            Chaotic e -> drawEntity e.position "#290101"
-            Evil e -> drawEntity e.position "#381604"
+            PlayerControlled e -> drawEntity e.position "#00ffe4" e.label
+            Good e -> drawEntity e.position "#00ffe4" e.label
+            Chaotic e -> drawEntity e.position "#ffa500" e.label
+            Evil e -> drawEntity e.position "#ff0013" e.label
     in
     let characters =
         case model.executingGame of
