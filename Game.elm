@@ -136,7 +136,7 @@ initialPlayer pos =
         , health   = 20
         , weapon   = Damage 2
         , canMove  = True
-        , label    = "Your Drone"
+        , label    = "Defence Drone"
         }
 
 initialExecutingGame : ExecutingGame
@@ -257,6 +257,7 @@ viewTextEditor model =
                 [ class "source"
                 , style [] 
                 , placeholder "Enter your source code here"
+                , spellcheck False
                 , on "change" targetValue (Signal.send updates << ModifySource)
                 ]
                 [ text model.source ]
