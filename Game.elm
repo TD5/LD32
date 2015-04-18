@@ -239,7 +239,12 @@ viewTextEditor model =
                 [ class "source"
                 , style [] 
                 ]
-                [ text "TEST" ]
+                [ text model.source ]
+            , button
+                [ class "btn btn-danger pull-right"
+                , style []
+                ]
+                [ text "Upload to drone" ]
             ]
         ]
 
