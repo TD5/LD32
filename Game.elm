@@ -98,7 +98,7 @@ initialBasicEnemy pos =
         }
 initialBasicChaotic : Position -> Character
 initialBasicChaotic pos =
-    Evil
+    Chaotic
         { position = pos
         , health   = 2
         , weapon   = Damage 1 
@@ -301,8 +301,8 @@ viewGameWorld model =
     in
     let viewCharacter char =
         case char of
-            PlayerControlled e -> drawEntity e.position "#00ffe4" e.label
-            Good e -> drawEntity e.position "#00ffe4" e.label
+            PlayerControlled e -> drawEntity e.position "#00ccb7" e.label
+            Good e -> drawEntity e.position "#00ccb7" e.label
             Chaotic e -> drawEntity e.position "#ffa500" e.label
             Evil e -> drawEntity e.position "#ff0013" e.label
     in
@@ -313,7 +313,7 @@ viewGameWorld model =
     in
     let background =
         Svg.rect
-            [ Svg.Attributes.fill "#010101"
+            [ Svg.Attributes.fill "#090C0C"
             , Svg.Attributes.width sizeTxt
             , Svg.Attributes.height sizeTxt
             , Svg.Attributes.x "0"
