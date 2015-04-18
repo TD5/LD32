@@ -197,7 +197,7 @@ modifySource newSource model =
 startBattle : Model -> Model
 startBattle model  =
     { model | executingGame <- Just initialExecutingGame }
-
+{-
 getIntentWithAI : Character -> Model -> Intent
 getIntentWithAI char model =
     -- TODO Add some basic AI here
@@ -243,15 +243,16 @@ resolveIntent characters world =
             -- TODO Rotate self to back of queue
             rotate characters
         Wait -> rotate characters
-
+-}
 timeStep : Model -> Model
 timeStep model =
     case model.executingGame of
         Nothing -> model -- If the game isn't executing, we don't need to step
         Just executingGame ->
-            let newCharacters = resolveIntent model.characters model.gameWorld in
-            let newExecutingGame = { executingGame | characters <- newCharacters } in
-            { model | executingGame <- newExecutingGame }
+            --let newCharacters = resolveIntent model.characters model.gameWorld in
+            --let newExecutingGame = { executingGame | characters <- newCharacters } in
+            --{ model | executingGame <- newExecutingGame }
+            model
 
 update : Action -> Model -> Model
 update action model =
