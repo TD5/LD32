@@ -21,6 +21,10 @@ import Maybe
 import Random
 import Signal
 import String
+import Svg
+import Svg.Attributes
+import Svg.Events
+import Svg.Lazy
 import Window
 
 
@@ -254,7 +258,53 @@ viewTextEditor model =
 
 viewGameWorld : Model -> Html
 viewGameWorld model =
-    text "Game world"
+    let size = 600 in
+    let sizeTxt = toString size in
+    let positionToView pos =
+        ( (toFloat pos.x / toFloat model.gameWorld.width)*size
+        , (toFloat pos.y / toFloat model.gameWorld.height)*size
+        )
+    in
+    let drawEntity pos color =
+        let charSize = toFloat size / 100.0 in
+        let charSizeTxt = toString charSize in
+        let viewPos = positionToView pos in
+        Svg.rect
+            [ Svg.Attributes.fill color
+            , Svg.Attributes.width charSizeTxt
+            , Svg.Attributes.height charSizeTxt 
+            , Svg.Attributes.x (viewPos |> fst |> toString)
+            , Svg.Attributes.y (viewPos |> snd |> toString)
+            ]
+            []
+    in
+    let viewCharacter char =
+        case char of
+            PlayerControlled e -> drawEntity e.position "#106b57"
+            Good e -> drawEntity e.position "#30543f"
+            Chaotic e -> drawEntity e.position "#290101"
+            Evil e -> drawEntity e.position "#381604"
+    in
+    let characters =
+        case model.executingGame of
+            Nothing -> []
+            Just exeGame -> exeGame.characters
+    in
+    Svg.svg
+        [ class "world"
+        , Svg.Attributes.width sizeTxt
+        , Svg.Attributes.height sizeTxt
+        ]
+        [ Svg.rect
+            [ Svg.Attributes.fill "#010101"
+            , Svg.Attributes.width sizeTxt
+            , Svg.Attributes.height sizeTxt
+            , Svg.Attributes.x "0"
+            , Svg.Attributes.y "0"
+            ]
+            []
+        , (characters |> List.map viewCharacter)
+        ]
 
 view : Model -> Html
 view model =
