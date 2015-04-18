@@ -75,7 +75,7 @@ type alias ExecutingGame =
     }
 
 type alias Model = -- The full state of the game at any point in time
-    { program        : ProgramSource
+    { source        : ProgramSource
     , sourceError    : Maybe String -- A description of what's wrong with the source code
     , gameWorld      : World
     , executingGame  : Maybe ExecutingGame
@@ -133,7 +133,7 @@ initialExecutingGame =
 
 initialModel : Model
 initialModel =
-    { program        = ""
+    { source        = "Some example program here"
     , sourceError    = Nothing
     , gameWorld      = initialWorld
     , executingGame  = Nothing
@@ -175,7 +175,7 @@ update action model = -- TODO Implement - currently everything is a NoOp.
 viewTextEditor : Model -> Html
 viewTextEditor model =
     div
-        [ class "panel panel-default"
+        [ class "panel panel-default fullHeight"
         , style [] 
         ]
         [ div
@@ -185,15 +185,22 @@ viewTextEditor model =
           [ h3 
               [ class "panel-title"
               , style [] 
-            ]
-            [ text "Source code" ]
+              ]
+              [ text "Source code" ]
+          ]
         , div
             [ class "panel-body"
-            , style []
+            , style 
+                [ ("height", "90%")
+                ]
             ]
-            [ text model.program ]
-          ]
-      ]
+            [ textarea
+                [ class "source"
+                , style [] 
+                ]
+                [ text "TEST" ]
+            ]
+        ]
 
 viewGameWorld : Model -> Html
 viewGameWorld model =
@@ -203,17 +210,20 @@ view : Model -> Html
 view model =
     div
         [ class "container-fluid"
-        , style []
+        , style 
+            [ ("height", "100vh")
+            , ("margin", "10px")
+            ]
         ]
         [ div 
-            [ class "row"
+            [ class "row fullHeight"
             , style [] 
             ] 
             [ div 
-                [ class "col-md-6" ]
+                [ class "col-md-6 fullHeight" ]
                 [ viewTextEditor model ]
             , div
-                [ class "col-md-6" ]
+                [ class "col-md-6 fullHeight" ]
                 [ viewGameWorld model ]
             ] 
         ]
