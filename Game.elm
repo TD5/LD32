@@ -256,7 +256,7 @@ viewTextEditor model =
             ]
         ]
 
-viewGameWorld : Model -> Html
+viewGameWorld : Model -> Svg.Svg
 viewGameWorld model =
     let size = 600 in
     let sizeTxt = toString size in
@@ -290,12 +290,8 @@ viewGameWorld model =
             Nothing -> []
             Just exeGame -> exeGame.characters
     in
-    Svg.svg
-        [ class "world"
-        , Svg.Attributes.width sizeTxt
-        , Svg.Attributes.height sizeTxt
-        ]
-        [ Svg.rect
+    let background =
+        Svg.rect
             [ Svg.Attributes.fill "#010101"
             , Svg.Attributes.width sizeTxt
             , Svg.Attributes.height sizeTxt
@@ -303,8 +299,13 @@ viewGameWorld model =
             , Svg.Attributes.y "0"
             ]
             []
-        , (characters |> List.map viewCharacter)
+    in
+    Svg.svg
+        [ class "world"
+        , Svg.Attributes.width sizeTxt
+        , Svg.Attributes.height sizeTxt
         ]
+        (background :: (characters |> List.map viewCharacter))
 
 view : Model -> Html
 view model =
