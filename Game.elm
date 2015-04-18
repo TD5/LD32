@@ -35,16 +35,11 @@ type alias ProgramMemory = Array Int
 
 type alias Health = Int
 
-type Team 
-    = Friendly 
-    | Neutral 
-    | Enemy
-
 type Weapon 
     = Unarmed 
     | Damage Int
 
-type alias World =  -- The origin is (0, 0) and it extends out to (width - 1, height - 1) in a rectangle
+type alias World = -- The origin is (0, 0) and it extends out to (width - 1, height - 1) in a rectangle
     { width  : Int
     , height : Int 
     }
@@ -54,29 +49,28 @@ type alias Position = -- Coods in the world
     , y : Int 
     }
 
-type alias NPC = -- A character in the world that the player can't control 
-    { team     : Team
-    , position : Position
+type alias Entity = -- An actor in the gameworld
+    { position : Position
     , health   : Health
     , weapon   : Weapon
     , canMove  : Bool 
     }
 
-type alias Player =  -- The unit the player's program controls
-    { position : Position
-    , health   : Health 
-    }
+type Character -- An entity with an alignment to a team
+    = PlayerControlled Entity
+    | Good Entity -- Won't attack player or other good entities
+    | Chaotic Entity -- Will attack anything, even other chaotics
+    | Evil Entity -- Won't attack other evil entities
 
 type alias ExecutingGame =
     { programMemory : ProgramMemory
-    , npcs          : List NPC
-    , player        : Player
+    , characters    : List Character -- In order of priority to perform an action
     , score         : Maybe Int
     }
 
 type alias Model = -- The full state of the game at any point in time
     { source         : ProgramSource
-    , sourceError    : Maybe String -- A description of what's wrong with the source code
+    , sourceError    : Maybe String
     , gameWorld      : World
     , executingGame  : Maybe ExecutingGame
     }
@@ -87,53 +81,56 @@ initialWorld =
     , height = 25
     }
 
-initialBasicEnemy : Position -> NPC
+initialBasicEnemy : Position -> Character
 initialBasicEnemy pos =
-    { team     = Enemy
-    , position = pos
-    , health   = 3
-    , weapon   = Damage 1 
-    , canMove  = True
-    }
+    Evil
+        { position = pos
+        , health   = 5
+        , weapon   = Damage 1 
+        , canMove  = True
+        }
 
 {-  
 A tough but unarmed, immobile friendly base that the player wants to protect
 -}
-initialBase : Position -> NPC
+initialBase : Position -> Character
 initialBase pos =
-    { team     = Friendly
-    , position = pos
-    , health   = 50
-    , weapon   = Unarmed
-    , canMove  = False
-    }
+    Good
+        { position = pos
+        , health   = 50
+        , weapon   = Unarmed
+        , canMove  = False
+        }
 
-initialNpcs : List NPC
-initialNpcs =  
+initialCharacters : List Character
+initialCharacters =
     [ initialBasicEnemy { x = 5,  y = 5  }
     , initialBasicEnemy { x = 20, y = 5  }
     , initialBasicEnemy { x = 5,  y = 20 }
-    , initialBasicEnemy { x = 20, y = 20 }
     , initialBase       { x = 12, y = 12 }
+    , initialPlayer     { x = 10, y = 8  }
+    , initialBasicEnemy { x = 20, y = 20 }
     ]
 
-initialPlayer : Position -> Player
+initialPlayer : Position -> Character
 initialPlayer pos = 
-    { position = pos
-    , health   = 20
-    }
+    PlayerControlled
+        { position = pos
+        , health   = 20
+        , weapon   = Damage 2
+        , canMove  = True
+        }
 
 initialExecutingGame : ExecutingGame
 initialExecutingGame =
     { programMemory = empty
-    , npcs          = initialNpcs
-    , player        = initialPlayer { x = 10, y = 8 }
+    , characters    = initialCharacters
     , score         = Just 0
     }
 
 initialModel : Model
 initialModel =
-    { source        = "Some example program here"
+    { source         = "Some example program here"
     , sourceError    = Nothing
     , gameWorld      = initialWorld
     , executingGame  = Nothing
@@ -161,7 +158,7 @@ type Direction
     | East
     | West
 
-type GameEntityAction
+type Intention -- Something that a character intends to do
     = Move Direction
     | Fire Direction
     | Wait
@@ -182,14 +179,25 @@ startBattle : Model -> Model
 startBattle model  =
     { model | executingGame <- Just initialExecutingGame }
 
+updateWithAI : Character -> Model -> Intention
+updateWithAI char model =
+    -- TODO Add some basic AI here
+    Wait
+
+updateWithProgram : Character -> Model -> Intention
+updateWithProgram char model =
+    -- TODO Interpret player's code to see what to do next
+    Wait
+
 timeStep : Model -> Model
 timeStep model =
     case model.executingGame of
         Nothing -> model -- If the game isn't executing, we don't need to step
         Just executingGame ->
+            -- TODO Get the next unit's intent
+            -- TODO Resolve the intent (they might not achieve what they way, e.g. if they try to move off the world)
+            -- TODO Reorder characters
             model
-            -- TODO Interpret player's code to see what to do next
-            -- TODO Make each other unit perform its action
 
 update : Action -> Model -> Model
 update action model =
