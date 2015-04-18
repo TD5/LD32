@@ -25,6 +25,7 @@ import Svg
 import Svg.Attributes
 import Svg.Events
 import Svg.Lazy
+import Time
 import Window
 
 
@@ -221,13 +222,13 @@ update : Action -> Model -> Model
 update action model =
     case action of
         ModifySource newSource -> 
-            Debug.log "Modify source" (modifySource newSource model) 
+            modifySource newSource model 
         StartBattle -> 
-            Debug.log "Start battle" (startBattle model)
+            startBattle model
         TimeStep delta -> 
-            Debug.log "Time step" model
+            model
         NoOp -> 
-            Debug.log "NoOp" model
+            model
 
 
 ---- VIEW ----
@@ -359,7 +360,11 @@ main = Signal.map view model
 
 -- manage the model of our application over time
 model : Signal Model
-model = Signal.foldp update initialModel (Signal.subscribe updates)
+model = Signal.foldp update initialModel (Signal.merge 
+    (Signal.map 
+        (\t -> TimeStep t) 
+        (Time.fps 5)) -- TODO Use fpsWhen?
+    (Signal.subscribe updates))
 
 -- updates from user input
 updates : Signal.Channel Action
