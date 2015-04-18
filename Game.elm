@@ -182,8 +182,17 @@ startBattle : Model -> Model
 startBattle model  =
     { model | executingGame <- Just initialExecutingGame }
 
+timeStep : Model -> Model
+timeStep model =
+    case model.executingGame of
+        Nothing -> model -- If the game isn't executing, we don't need to step
+        Just executingGame ->
+            model
+            -- TODO Interpret player's code to see what to do next
+            -- TODO Make each other unit perform its action
+
 update : Action -> Model -> Model
-update action model = -- TODO Implement - currently everything is a NoOp.
+update action model =
     case action of
         ModifySource newSource -> 
             modifySource newSource model 
@@ -193,6 +202,7 @@ update action model = -- TODO Implement - currently everything is a NoOp.
             model
         NoOp -> 
             model
+
 
 ---- VIEW ----
 
