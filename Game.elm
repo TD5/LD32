@@ -282,7 +282,7 @@ viewGameWorld model =
         let charSize = toFloat size / 100.0 in
         let charSizeTxt = toString charSize in
         let viewPos = positionToView pos in
-        Svg.rect
+        [ Svg.rect
             [ Svg.Attributes.fill color
             , Svg.Attributes.width charSizeTxt
             , Svg.Attributes.height charSizeTxt 
@@ -290,6 +290,13 @@ viewGameWorld model =
             , Svg.Attributes.y (viewPos |> snd |> toString)
             ]
             []
+        , Svg.text
+            [ Svg.Attributes.fill color
+            , Svg.Attributes.x (viewPos |> fst |> toString)
+            , Svg.Attributes.y (viewPos |> snd |> toString)
+            ]
+            [ text label ]
+        ]
     in
     let viewCharacter char =
         case char of
@@ -318,7 +325,7 @@ viewGameWorld model =
         , Svg.Attributes.width sizeTxt
         , Svg.Attributes.height sizeTxt
         ]
-        (background :: (characters |> List.map viewCharacter))
+        (background :: (characters |> List.concatMap viewCharacter))
 
 view : Model -> Html
 view model =
