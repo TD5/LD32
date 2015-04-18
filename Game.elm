@@ -166,7 +166,7 @@ type Action
     | StartBattle          
 
     -- The wall clock ticks, driving our battle forward if the game has started
-    | TimeStep Float       
+    | StepBattle Float       
 
     -- Ronseal
     | NoOp
@@ -215,7 +215,7 @@ rotate characters = -- Moves the first element to the back of the array
         1 -> characters
         _ -> 
             let first = get 0 characters in
-            let tail = slice 1 (length characters) in
+            let tail = slice 1 (length characters |> (-) 1) in
             push first tail
 
 resolveIntent : List Character -> World -> List Character
@@ -231,9 +231,9 @@ timeStep model =
     case model.executingGame of
         Nothing -> model -- If the game isn't executing, we don't need to step
         Just executingGame ->
-            { model | executingGame <- initialExecutingGame }
-                --{ model.executingGame | characters <- 
-                --    resolveIntent model.characters model.gameWorld } }
+            let newCharacters = resolveIntent model.characters model.gameWorld in
+            let newExecutingGame = { executingGame | characters <- newCharacters } in
+            { model | executingGame <- newExecutingGame }
 
 update : Action -> Model -> Model
 update action model =
@@ -242,7 +242,7 @@ update action model =
             modifySource newSource model 
         StartBattle -> 
             startBattle model
-        TimeStep delta -> 
+        StepBattle delta -> 
             model
         NoOp -> 
             model
@@ -379,7 +379,7 @@ main = Signal.map view model
 model : Signal Model
 model = Signal.foldp update initialModel (Signal.merge 
     (Signal.map 
-        (\t -> TimeStep t) 
+        (\t -> StepBattle t) 
         (Time.fps 5)) -- TODO Use fpsWhen?
     (Signal.subscribe updates))
 
