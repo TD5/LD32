@@ -10,6 +10,7 @@ goal is to keep as many friendly units alive for as long as possible.
 -}
 
 import Array (..)
+import Debug
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
@@ -203,13 +204,13 @@ update : Action -> Model -> Model
 update action model =
     case action of
         ModifySource newSource -> 
-            modifySource newSource model 
+            Debug.log "Modify source" (modifySource newSource model) 
         StartBattle -> 
-            startBattle model
+            Debug.log "Start battle" (startBattle model)
         TimeStep delta -> 
-            model
+            Debug.log "Time step" model
         NoOp -> 
-            model
+            Debug.log "NoOp" model
 
 
 ---- VIEW ----
@@ -239,11 +240,13 @@ viewTextEditor model =
                 [ class "source"
                 , style [] 
                 , placeholder "Enter your source code here"
+                , on "change" targetValue (Signal.send updates << ModifySource)
                 ]
                 [ text model.source ]
             , button
                 [ class "btn btn-danger pull-right"
                 , style []
+                , onClick (Signal.send updates StartBattle)
                 ]
                 [ text "Upload to drone" ]
             ]
