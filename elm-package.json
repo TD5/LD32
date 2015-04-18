@@ -4,7 +4,10 @@
     "repository": "https://github.com/TD5/LD32.git",
     "license": "Not sure yet",
     "source-directories": [
-        "."
+        ".",
+        "css",
+        "js",
+        "fonts"
     ],
     "exposed-modules": [],
     "dependencies": {

@@ -172,13 +172,32 @@ update action model = -- TODO Implement - currently everything is a NoOp.
 
 ---- VIEW ----
 
+viewTextEditor : Model -> Html
+viewTextEditor model =
+    text "Text Editor"
+
+viewGameWorld : Model -> Html
+viewGameWorld model =
+    text "Game world"
+
 view : Model -> Html
 view model =
     div
       [ class "container-fluid"
       , style []
       ]
-      [ text "Test" ]
+      [ div 
+        [ class "row"
+        , style [] 
+        ] 
+        [ div 
+            [ class "col-md-6" ]
+            [ viewTextEditor model ]
+        , div
+            [ class "col-md-6" ]
+            [ viewGameWorld model ]
+        ] 
+      ]
 
 ---- INPUTS ----
 
