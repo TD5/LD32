@@ -1,6 +1,15 @@
 module Game where
-{-| This is my game! -}
+{-| This is my game! 
 
+The player writes a program which then controls their unit on the battlefield.
+
+Their unit fights on their behalf until there are no friendly unit left - the
+goal is to keep as many friendly units alive for as long as possible.
+
+- The unconventional weapon is the player's logical reasoning!
+-}
+
+import Arrays
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
@@ -8,43 +17,86 @@ import Html.Lazy (lazy, lazy2)
 import Json.Decode as Json
 import List
 import Maybe
+import Random
 import Signal
 import String
 import Window
 
 
 ---- MODEL ----
+type alias ProgramSource = String
+type alias ProgramState = Array [ Int ] -- The player can only store an array of numbers between executions
+
+type alias Team = Friendly | Neutral | Enemy
+type alias World = { width : Int, height : Int } -- The origin is (0, 0) and it extends out to (width - 1, height - 1) in a rectangle
+type alias Position = { x : Int, y : Int } -- Coods in the world
+type alias Health = Int
+type alias Weapon = Unarmed | Damage Int
+type alias Unit = { team : Team, position : Position, health : Health, weapon : Weapon, canMove : Bool }
+type alias Player = { position : Position, health : Health } -- The unit the player's program controls
+type alias ExecutingGame = 
+    { programState : ProgramState
+    , npcs         : List Unit
+    , player       : Player
+    , score        : Maybe Int
+    }
 
 type alias Model =
-    { tasks      : List Task
-    , field      : String
-    , uid        : Int
-    , visibility : String
+    { program        : ProgramSource
+    , gameWorld      : World
+    , executingGame  : Maybe ExecutingGame
     }
 
-type alias Task =
-    { description : String
-    , completed   : Bool
-    , editing     : Bool
-    , id          : Int
+initialWorld : World
+initialWorld = 
+    { width  : 25
+    , height : 25
     }
 
-newTask : String -> Int -> Task
-newTask desc id =
-    { description = desc
-    , completed = False 
-    , editing = False
-    , id = id
+initialBasicEnemy : Position -> Unit
+initialBasicEnemy pos =
+    { team     = Enemy
+    , position = pos
+    , health   = 3
+    , weapon   = Damage 1 
+    , canMove  = True
+    }
+
+{-  
+A tough but unarmed, immobile friendly base that the player wants to protect
+-}
+initialBase : Position -> Unit
+initialBase pos =
+    { team     = Friendly
+    , position = pos
+    , health   = 50
+    , weapon   = Unarmed
+    , canMove  = False
+    }
+
+initialNpcs : List Unit
+initialNpcs =  
+    [ initialBasicEnemy { x = 5,  y = 5  }
+    , initialBasicEnemy { x = 20, y = 5  }
+    , initialBasicEnemy { x = 5,  y = 20 }
+    , initialBasicEnemy { x = 20, y = 20 }
+    , initialBase { x = 12, y = 12 }
+    ]
+
+initialPlayer : Position -> Player
+initialPlayer pos = 
+    { position = pos
+    , health   = 20
     }
 
 emptyModel : Model
 emptyModel =
-    { tasks = []
-    , visibility = "All"
-    , field = ""
-    , uid = 0
+    { program      : ""
+    , programState : []
+    , gameWorld    : initialWorld
+    , npcs         : initialNpcs
+    , player       : initialPlayer { x = 10, y = 8 } 
     }
-
 
 ---- UPDATE ----
 
