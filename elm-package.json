@@ -1,0 +1,14 @@
+{
+    "version": "1.0.0",
+    "summary": "My entry for Ludum Dare 32",
+    "repository": "https://github.com/TD5/LD32.git",
+    "license": "Not sure yet",
+    "source-directories": [
+        "."
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "elm-lang/core": "1.1.1 <= v < 2.0.0",
+        "evancz/elm-html": "1.0.0 <= v < 2.0.0"
+    }
+}
