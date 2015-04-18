@@ -236,6 +236,7 @@ resolveIntent characters world =
             let updatedCharacter = 
                 { nextCharacter | position <- -- TODO Check for collisions with other entities
                     if isInWorld intendedPosition then intendedPosition else nextCharacter.position }
+            in
             rotate (set 0 updatedCharacter characters)
         Fire direction ->
             -- TODO Damage nearest enemy in direction of fire
@@ -301,7 +302,7 @@ viewTextEditor model =
                 , style []
                 , onClick (Signal.send updates StartBattle)
                 ]
-                [ text "Upload to drone" ]
+                [ text "Upload to Drone" ]
             ]
         ]
 
