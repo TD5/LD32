@@ -354,11 +354,17 @@ isSomething maybe =
 
 parseIsWithinCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
 parseIsWithinCheck checkStr =
-    let isWithinFunc object distance direction char otherChars world =
+    let isWithinFunc object distance optDirection char otherChars world =
         let here = getPosition char in
         let distCheck from maybeChar distance =
             case maybeChar of
-                Just to -> getPosition to |> dist from |> (<=) (toFloat distance)
+                Just to -> 
+                    let isCloseEnough = 
+                        getPosition to |> dist from |> (>=) (toFloat distance)
+                    in
+                       case optDirection of
+                           Nothing  -> isCloseEnough
+                           Just dir -> getPosition to |> isDirectly dir here
                 Nothing -> False
         in
         case object of
@@ -372,9 +378,9 @@ parseIsWithinCheck checkStr =
                 let maybeObj = parseObj objStr in
                 let maybeDist = String.toInt distStr |> Result.toMaybe in
                 let maybeDir = parseDir dirStr in
-                case (maybeObj, maybeDist, maybeDir) of
-                    (Just obj, Just dist, Just dir) ->
-                        Just (isWithinFunc obj dist dir)
+                case (maybeObj, maybeDist) of
+                    (Just obj, Just dist) ->
+                        Just (isWithinFunc obj dist maybeDir)
                     _ -> Nothing
             _ -> Nothing
     in
@@ -515,7 +521,7 @@ resolveIntent characters world source =
             let otherCharacters = tail characters in
             let intentOrError = 
                 case thisCharacter of
-                    Player _ -> getIntentWithProgram thisCharacter otherCharacters world source 
+                    Player _ -> getIntentWithProgram thisCharacter otherCharacters world source |> Debug.log "Intent from program" 
                     _        -> AnIntentTo (getIntentWithAI thisCharacter otherCharacters world)
             in
             case intentOrError of
@@ -576,13 +582,13 @@ timeStep model =
                     in
                     { model | executingGame <- Just newExecutingGame }
                 ErrorOf error -> 
-                    { model | sourceError <- Just error }
+                    { model | sourceError <- Just (error |> Debug.log "Error") }
 
 update : Action -> Model -> Model
 update action model =
     case action of
         ModifySource newSource -> 
-            modifySource newSource model |> Debug.log "Step battle"
+            modifySource newSource model
         StartBattle -> 
             startBattle model
         StepBattle delta -> 
