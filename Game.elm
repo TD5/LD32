@@ -407,14 +407,17 @@ getIntentWithProgram char otherChars world source =
         case String.split " when " line of
             intentStr :: checkStr :: [] -> 
                 handleCheckAndIntent checkStr intentStr
-            _ -> Just (AnErrorOf "A line is missing 'then'")
+            _ -> Just (AnErrorOf "A line is missing 'when'")
     in
     let handleLine line currentIntent =
         case currentIntent of
             Nothing -> parseLine line
             x       -> x -- We already have some output
     in
-    let possiblyIntentOrError = List.foldl handleLine Nothing lines in
+    let possiblyIntentOrError = 
+        if String.isEmpty source -- No source at all just makes player wait
+           then Nothing
+           else List.foldl handleLine Nothing lines in
     case possiblyIntentOrError of
         Nothing -> AnIntentTo Wait
         Just x  -> x
@@ -550,7 +553,7 @@ update : Action -> Model -> Model
 update action model =
     case action of
         ModifySource newSource -> 
-            modifySource newSource model 
+            modifySource newSource model |> Debug.log "Step battle"
         StartBattle -> 
             startBattle model
         StepBattle delta -> 
