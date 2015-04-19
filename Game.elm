@@ -325,7 +325,7 @@ type IntentOrSourceError
     | AnErrorOf SourceError
 
 isWithinRegex : Regex.Regex
-isWithinRegex = Regex.regex "^if (enemy|friendly|edge) isWithin (\\d+) (north|south|east|west)?$"
+isWithinRegex = Regex.regex "^(enemy|friendly|edge) isWithin (\\d+) (north|south|east|west)?$"
 
 type Object
     = Enemy
@@ -425,10 +425,10 @@ getIntentWithProgram char otherChars world source =
                 else Nothing
         in
         case maybeCheck of
-            Nothing -> Just (AnErrorOf "Broken check")
+            Nothing -> Just (AnErrorOf ("Broken check: '" ++ checkStr ++ "'"))
             Just check ->
                 case maybeIntent of
-                    Nothing -> Just (AnErrorOf "Broken intent")
+                    Nothing -> Just (AnErrorOf ("Broken intent: '" ++ intentStr ++ "'"))
                     Just intent -> checkForIntent check intent
     in
     let parseLine line = -- Takes a line and gives a Maybe IntentOrSourceError
@@ -436,7 +436,7 @@ getIntentWithProgram char otherChars world source =
         case String.split " when " line of
             intentStr :: checkStr :: [] -> 
                 handleCheckAndIntent checkStr intentStr
-            _ -> Just (AnErrorOf "A line is missing 'when'")
+            _ -> Just (AnErrorOf ("A line is missing 'when': '" ++ line ++ "'"))
     in
     let handleLine line currentIntent =
         case currentIntent of
