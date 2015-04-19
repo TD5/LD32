@@ -278,7 +278,9 @@ modifySource newSource model =
 
 startBattle : Model -> Model
 startBattle model  =
-    { model | executingGame <- Just initialExecutingGame }
+    { model | executingGame <- Just initialExecutingGame
+            , sourceError <- Nothing
+    }
 
 dist : Position -> Position -> Float
 dist posA posB =
