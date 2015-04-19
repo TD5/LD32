@@ -11,6 +11,7 @@ goal is to keep as many friendly units alive for as long as possible.
 
 import Array (..)
 import Debug
+import Parser
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
@@ -316,6 +317,9 @@ type IntentOrSourceError
 
 getIntentWithProgram : Character -> Array Character -> World -> ProgramSource -> IntentOrSourceError
 getIntentWithProgram char otherChars model source =
+    AnIntentTo Wait
+    -- TODO Use Dandandan's parser here
+{-
     if | source == "move north" -> AnIntentTo (Move North)
        | source == "move south" -> AnIntentTo (Move South)
        | source == "move east"  -> AnIntentTo (Move East)
@@ -326,6 +330,7 @@ getIntentWithProgram char otherChars model source =
        | source == "fire west"  -> AnIntentTo (Fire West)
        | source == "wait"       -> AnIntentTo Wait
        | otherwise              -> AnErrorOf "Unrecognised command"
+-}
 
 tail : Array Character -> Array Character
 tail chars = 
