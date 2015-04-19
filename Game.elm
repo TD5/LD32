@@ -356,11 +356,15 @@ parseIsWithinCheck : String -> Maybe (Character -> Array Character -> World -> B
 parseIsWithinCheck checkStr =
     let isWithinFunc object distance direction char otherChars world =
         let here = getPosition char in
+        let distCheck from maybeChar distance =
+            case maybeChar of
+                Just to -> getPosition to |> dist from |> (<=) (toFloat distance)
+                Nothing -> False
+        in
         case object of
             WorldEdge -> distanceToEdgeOfWorld here world <= distance
-            -- TODO Check distance
-            Enemy     -> isSomething (nearestWhere (not << isGood) otherChars here)
-            Friendly  -> isSomething (nearestWhere isGood otherChars here)
+            Enemy     -> distCheck here (nearestWhere (not << isGood) otherChars here) distance
+            Friendly  -> distCheck here (nearestWhere isGood otherChars here) distance
     in
     let buildIsWithinFunc optObjStr optDistStr optDirStr =
         case (optObjStr, optDistStr, optDirStr) of
