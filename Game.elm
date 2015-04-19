@@ -269,8 +269,7 @@ resolveIntent characters world =
                            then intendedPosition 
                            else thisCharacterPos 
                     in
-                    let updatedCharacter = 
-                        { thisCharacter | position <- resultantPosition }
+                    let updatedCharacter = setPosition thisCharacter resultantPosition
                     in
                     Some (set 0 updatedCharacter characters |> rotate)
                 Fire direction ->
