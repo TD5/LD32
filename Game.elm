@@ -327,12 +327,13 @@ resolveIntent characters world =
     case get 0 characters of
         Nothing -> Some characters -- Nothing to do
         Just thisCharacter ->
-            let thisCharacterPos = getPosition thisCharacter in
-            let intent = getIntentWithAI thisCharacter (tail characters) world in
+            let here = getPosition thisCharacter in
+            let otherCharacters = tail characters in
+            let intent = getIntentWithAI thisCharacter otherCharacters world in
             case intent of
                 Wait -> Some (rotate characters) -- The character has forfeited their turn
                 Move direction ->
-                    let intendedPosition = thisCharacterPos |> move direction in
+                    let intendedPosition = here |> move direction in
                     let isValid pos =
                         isInWorld world pos &&
                         (isAnyAt characters pos |> not) &&
@@ -341,15 +342,23 @@ resolveIntent characters world =
                     let resultantPosition = 
                         if isValid intendedPosition
                            then intendedPosition 
-                           else thisCharacterPos 
+                           else here 
                     in
                     let updatedCharacter = setPosition thisCharacter resultantPosition
                     in
                     Some (set 0 updatedCharacter characters |> rotate)
-                Fire direction ->
-                    -- TODO Damage nearest enemy in direction of fire
-                    -- TODO Rotate self to back of queue
-                    Some (rotate characters)
+                Fire firingDirection ->
+                    let directionTo char = directionFrom here (getPosition char) in
+                    let possibleCharacterHit =
+                        nearestWhere (\otherChar -> (directionTo otherChar) == firingDirection) otherCharacters here
+                    in
+                    -- TODO Damage but don't necessarily always destroy
+                    let charactersLeft =
+                        case possibleCharacterHit of
+                            Nothing  -> otherCharacters
+                            Just hit -> filter (not << (==) hit) otherCharacters
+                    in
+                    Some (push thisCharacter charactersLeft)
 
 timeStep : Model -> Model
 timeStep model =
