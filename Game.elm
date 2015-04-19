@@ -220,7 +220,11 @@ startBattle model  =
 getIntentWithAI : Character -> World -> Intent
 getIntentWithAI char model =
     -- TODO Add some basic AI here
-    Wait
+    case char of
+        Player e  -> Move North
+        Good e    -> Move South
+        Chaotic e -> Move East
+        Evil e    -> Move West
 
 type IntentOrSourceError
     = AnIntentTo Intent
@@ -265,7 +269,7 @@ resolveIntent characters world =
                     let intendedPosition = thisCharacterPos |> move direction in
                     -- TODO Check for collisions with other entities
                     let resultantPosition = 
-                        if isInWorld world intendedPosition 
+                        if isInWorld world intendedPosition -- TODO And can move (make way to apply etity func to char?)
                            then intendedPosition 
                            else thisCharacterPos 
                     in
@@ -280,24 +284,29 @@ resolveIntent characters world =
 timeStep : Model -> Model
 timeStep model =
     case model.executingGame of
-        Nothing -> model -- If the game isn't executing, we don't need to step
+        Nothing -> 
+            model -- If the game isn't executing, we don't need to step
         Just executingGame ->
-            --let newCharacters = resolveIntent model.characters model.gameWorld in
-            --let newExecutingGame = { executingGame | characters <- newCharacters } in
-            --{ model | executingGame <- newExecutingGame }
-            model
+            case resolveIntent executingGame.characters model.gameWorld of
+                Some newCharacters -> 
+                    let newExecutingGame =
+                        { executingGame | characters <- newCharacters } 
+                    in
+                    { model | executingGame <- Just newExecutingGame }
+                ErrorOf error -> 
+                    { model | sourceError <- Just error }
 
 update : Action -> Model -> Model
 update action model =
     case action of
         ModifySource newSource -> 
-            modifySource newSource model 
+            modifySource newSource model |> Debug.log "Modify source" 
         StartBattle -> 
-            startBattle model
+            startBattle model |> Debug.log "Start battle" 
         StepBattle delta -> 
-            model
+            timeStep model |> Debug.log "Step battle" 
         NoOp -> 
-            model
+            model |> Debug.log "NoOp" 
 
 
 ---- VIEW ----
