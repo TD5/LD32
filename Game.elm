@@ -252,6 +252,15 @@ nearestWhere check characters pos =
     |> filter check 
     |> foldl getClosest Nothing 
 
+direction : Position -> Position -> Direction
+direction from to =
+    let diffX = to.x - from.x in
+    let diffY = to.y - from.y in
+    if | abs diffX > abs diffY ->
+        if diffX > 0 then East else West
+       | otherwise ->
+        if diffY > 0 then North else South
+
 getIntentWithAI : Character -> World -> Intent
 getIntentWithAI char model =
     -- TODO Add some basic AI here
