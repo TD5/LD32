@@ -336,13 +336,13 @@ parseIntent intentStr = -- Tries to parse an intent
         _                      -> Nothing
 
 getIntentWithProgram : Character -> Array Character -> World -> ProgramSource -> IntentOrSourceError
-getIntentWithProgram char otherChars model source =
+getIntentWithProgram char otherChars world source =
     let lines = String.split "\n" source in
     let handleCheckAndIntent checkStr intentStr = 
         let maybeCheck = parseCheck checkStr in -- Possibly some func for testing game state
         let maybeIntent = parseIntent intentStr in -- Possibly an Intent: Move North, Fire East, Wait etc
         let checkForIntent check intent = -- Applies a check to maybe yield an intent depending of whether the test passes
-            if check char otherChars model.world
+            if check char otherChars world
                 then Just (AnIntentTo intent)
                 else Nothing
         in
