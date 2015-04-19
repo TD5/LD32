@@ -1,0 +1,674 @@
+Elm.Svg = Elm.Svg || {};
+Elm.Svg.make = function (_elm) {
+   "use strict";
+   _elm.Svg = _elm.Svg || {};
+   if (_elm.Svg.values)
+   return _elm.Svg.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Svg",
+   $Html = Elm.Html.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var svgNamespace = A2($VirtualDom.property,
+   "namespace",
+   $Json$Encode.string("http://www.w3.org/2000/svg"));
+   var svgNode = F3(function (name,
+   attributes,
+   children) {
+      return A3($VirtualDom.node,
+      name,
+      A2($List._op["::"],
+      svgNamespace,
+      attributes),
+      children);
+   });
+   var svg = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "svg",
+      attributes,
+      children);
+   });
+   var foreignObject = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "foreignObject",
+      attributes,
+      children);
+   });
+   var animate = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "animate",
+      attributes,
+      children);
+   });
+   var animateColor = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "animateColor",
+      attributes,
+      children);
+   });
+   var animateMotion = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "animateMotion",
+      attributes,
+      children);
+   });
+   var animateTransform = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "animateTransform",
+      attributes,
+      children);
+   });
+   var mpath = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "mpath",
+      attributes,
+      children);
+   });
+   var set = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "set",
+      attributes,
+      children);
+   });
+   var a = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "a",
+      attributes,
+      children);
+   });
+   var defs = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "defs",
+      attributes,
+      children);
+   });
+   var g = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "g",
+      attributes,
+      children);
+   });
+   var marker = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "marker",
+      attributes,
+      children);
+   });
+   var mask = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "mask",
+      attributes,
+      children);
+   });
+   var missingGlyph = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "missingGlyph",
+      attributes,
+      children);
+   });
+   var pattern = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "pattern",
+      attributes,
+      children);
+   });
+   var $switch = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "switch",
+      attributes,
+      children);
+   });
+   var symbol = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "symbol",
+      attributes,
+      children);
+   });
+   var desc = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "desc",
+      attributes,
+      children);
+   });
+   var metadata = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "metadata",
+      attributes,
+      children);
+   });
+   var title = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "title",
+      attributes,
+      children);
+   });
+   var feBlend = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feBlend",
+      attributes,
+      children);
+   });
+   var feColorMatrix = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feColorMatrix",
+      attributes,
+      children);
+   });
+   var feComponentTransfer = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feComponentTransfer",
+      attributes,
+      children);
+   });
+   var feComposite = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feComposite",
+      attributes,
+      children);
+   });
+   var feConvolveMatrix = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feConvolveMatrix",
+      attributes,
+      children);
+   });
+   var feDiffuseLighting = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feDiffuseLighting",
+      attributes,
+      children);
+   });
+   var feDisplacementMap = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feDisplacementMap",
+      attributes,
+      children);
+   });
+   var feFlood = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feFlood",
+      attributes,
+      children);
+   });
+   var feFuncA = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feFuncA",
+      attributes,
+      children);
+   });
+   var feFuncB = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feFuncB",
+      attributes,
+      children);
+   });
+   var feFuncG = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feFuncG",
+      attributes,
+      children);
+   });
+   var feFuncR = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feFuncR",
+      attributes,
+      children);
+   });
+   var feGaussianBlur = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feGaussianBlur",
+      attributes,
+      children);
+   });
+   var feImage = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feImage",
+      attributes,
+      children);
+   });
+   var feMerge = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feMerge",
+      attributes,
+      children);
+   });
+   var feMergeNode = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feMergeNode",
+      attributes,
+      children);
+   });
+   var feMorphology = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feMorphology",
+      attributes,
+      children);
+   });
+   var feOffset = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feOffset",
+      attributes,
+      children);
+   });
+   var feSpecularLighting = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feSpecularLighting",
+      attributes,
+      children);
+   });
+   var feTile = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feTile",
+      attributes,
+      children);
+   });
+   var feTurbulence = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feTurbulence",
+      attributes,
+      children);
+   });
+   var font = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "font",
+      attributes,
+      children);
+   });
+   var fontFace = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "fontFace",
+      attributes,
+      children);
+   });
+   var fontFaceFormat = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "fontFaceFormat",
+      attributes,
+      children);
+   });
+   var fontFaceName = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "fontFaceName",
+      attributes,
+      children);
+   });
+   var fontFaceSrc = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "fontFaceSrc",
+      attributes,
+      children);
+   });
+   var fontFaceUri = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "fontFaceUri",
+      attributes,
+      children);
+   });
+   var hkern = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "hkern",
+      attributes,
+      children);
+   });
+   var vkern = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "vkern",
+      attributes,
+      children);
+   });
+   var linearGradient = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "linearGradient",
+      attributes,
+      children);
+   });
+   var radialGradient = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "radialGradient",
+      attributes,
+      children);
+   });
+   var stop = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "stop",
+      attributes,
+      children);
+   });
+   var circle = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "circle",
+      attributes,
+      children);
+   });
+   var ellipse = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "ellipse",
+      attributes,
+      children);
+   });
+   var image = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "image",
+      attributes,
+      children);
+   });
+   var line = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "line",
+      attributes,
+      children);
+   });
+   var path = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "path",
+      attributes,
+      children);
+   });
+   var polygon = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "polygon",
+      attributes,
+      children);
+   });
+   var polyline = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "polyline",
+      attributes,
+      children);
+   });
+   var rect = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "rect",
+      attributes,
+      children);
+   });
+   var use = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "use",
+      attributes,
+      children);
+   });
+   var feDistantLight = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feDistantLight",
+      attributes,
+      children);
+   });
+   var fePointLight = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "fePointLight",
+      attributes,
+      children);
+   });
+   var feSpotLight = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "feSpotLight",
+      attributes,
+      children);
+   });
+   var altGlyph = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "altGlyph",
+      attributes,
+      children);
+   });
+   var altGlyphDef = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "altGlyphDef",
+      attributes,
+      children);
+   });
+   var altGlyphItem = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "altGlyphItem",
+      attributes,
+      children);
+   });
+   var glyph = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "glyph",
+      attributes,
+      children);
+   });
+   var glyphRef = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "glyphRef",
+      attributes,
+      children);
+   });
+   var textPath = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "textPath",
+      attributes,
+      children);
+   });
+   var text = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "text",
+      attributes,
+      children);
+   });
+   var tref = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "tref",
+      attributes,
+      children);
+   });
+   var tspan = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "tspan",
+      attributes,
+      children);
+   });
+   var clipPath = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "clipPath",
+      attributes,
+      children);
+   });
+   var colorProfile = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "colorProfile",
+      attributes,
+      children);
+   });
+   var cursor = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "cursor",
+      attributes,
+      children);
+   });
+   var filter = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "filter",
+      attributes,
+      children);
+   });
+   var script = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "script",
+      attributes,
+      children);
+   });
+   var style = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "style",
+      attributes,
+      children);
+   });
+   var view = F2(function (attributes,
+   children) {
+      return A3(svgNode,
+      "view",
+      attributes,
+      children);
+   });
+   _elm.Svg.values = {_op: _op
+                     ,svgNamespace: svgNamespace
+                     ,svgNode: svgNode
+                     ,svg: svg
+                     ,foreignObject: foreignObject
+                     ,animate: animate
+                     ,animateColor: animateColor
+                     ,animateMotion: animateMotion
+                     ,animateTransform: animateTransform
+                     ,mpath: mpath
+                     ,set: set
+                     ,a: a
+                     ,defs: defs
+                     ,g: g
+                     ,marker: marker
+                     ,mask: mask
+                     ,missingGlyph: missingGlyph
+                     ,pattern: pattern
+                     ,$switch: $switch
+                     ,symbol: symbol
+                     ,desc: desc
+                     ,metadata: metadata
+                     ,title: title
+                     ,feBlend: feBlend
+                     ,feColorMatrix: feColorMatrix
+                     ,feComponentTransfer: feComponentTransfer
+                     ,feComposite: feComposite
+                     ,feConvolveMatrix: feConvolveMatrix
+                     ,feDiffuseLighting: feDiffuseLighting
+                     ,feDisplacementMap: feDisplacementMap
+                     ,feFlood: feFlood
+                     ,feFuncA: feFuncA
+                     ,feFuncB: feFuncB
+                     ,feFuncG: feFuncG
+                     ,feFuncR: feFuncR
+                     ,feGaussianBlur: feGaussianBlur
+                     ,feImage: feImage
+                     ,feMerge: feMerge
+                     ,feMergeNode: feMergeNode
+                     ,feMorphology: feMorphology
+                     ,feOffset: feOffset
+                     ,feSpecularLighting: feSpecularLighting
+                     ,feTile: feTile
+                     ,feTurbulence: feTurbulence
+                     ,font: font
+                     ,fontFace: fontFace
+                     ,fontFaceFormat: fontFaceFormat
+                     ,fontFaceName: fontFaceName
+                     ,fontFaceSrc: fontFaceSrc
+                     ,fontFaceUri: fontFaceUri
+                     ,hkern: hkern
+                     ,vkern: vkern
+                     ,linearGradient: linearGradient
+                     ,radialGradient: radialGradient
+                     ,stop: stop
+                     ,circle: circle
+                     ,ellipse: ellipse
+                     ,image: image
+                     ,line: line
+                     ,path: path
+                     ,polygon: polygon
+                     ,polyline: polyline
+                     ,rect: rect
+                     ,use: use
+                     ,feDistantLight: feDistantLight
+                     ,fePointLight: fePointLight
+                     ,feSpotLight: feSpotLight
+                     ,altGlyph: altGlyph
+                     ,altGlyphDef: altGlyphDef
+                     ,altGlyphItem: altGlyphItem
+                     ,glyph: glyph
+                     ,glyphRef: glyphRef
+                     ,textPath: textPath
+                     ,text: text
+                     ,tref: tref
+                     ,tspan: tspan
+                     ,clipPath: clipPath
+                     ,colorProfile: colorProfile
+                     ,cursor: cursor
+                     ,filter: filter
+                     ,script: script
+                     ,style: style
+                     ,view: view};
+   return _elm.Svg.values;
+};

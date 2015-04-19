@@ -1,0 +1,25 @@
+Elm.Svg = Elm.Svg || {};
+Elm.Svg.Lazy = Elm.Svg.Lazy || {};
+Elm.Svg.Lazy.make = function (_elm) {
+   "use strict";
+   _elm.Svg = _elm.Svg || {};
+   _elm.Svg.Lazy = _elm.Svg.Lazy || {};
+   if (_elm.Svg.Lazy.values)
+   return _elm.Svg.Lazy.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Svg.Lazy",
+   $Svg = Elm.Svg.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var lazy3 = $VirtualDom.lazy3;
+   var lazy2 = $VirtualDom.lazy2;
+   var lazy = $VirtualDom.lazy;
+   _elm.Svg.Lazy.values = {_op: _op
+                          ,lazy: lazy
+                          ,lazy2: lazy2
+                          ,lazy3: lazy3};
+   return _elm.Svg.Lazy.values;
+};

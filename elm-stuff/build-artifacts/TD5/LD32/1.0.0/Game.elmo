@@ -1,0 +1,1372 @@
+Elm.Game = Elm.Game || {};
+Elm.Game.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   if (_elm.Game.values)
+   return _elm.Game.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Game",
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Regex = Elm.Regex.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var getDamage = function (c) {
+      return function () {
+         var weapon = function () {
+            switch (c.ctor)
+            {case "Chaotic":
+               return c._0.weapon;
+               case "Evil": return c._0.weapon;
+               case "Good": return c._0.weapon;
+               case "Player":
+               return c._0.weapon;}
+            _U.badCase($moduleName,
+            "between lines 546 and 551");
+         }();
+         return function () {
+            switch (weapon.ctor)
+            {case "Damage":
+               return weapon._0;
+               case "Unarmed": return 0;}
+            _U.badCase($moduleName,
+            "between lines 552 and 554");
+         }();
+      }();
+   };
+   var ErrorOf = function (a) {
+      return {ctor: "ErrorOf"
+             ,_0: a};
+   };
+   var Some = function (a) {
+      return {ctor: "Some",_0: a};
+   };
+   var move = F2(function (direction,
+   position) {
+      return function () {
+         switch (direction.ctor)
+         {case "East":
+            return _U.replace([["x"
+                               ,position.x + 1]],
+              position);
+            case "North":
+            return _U.replace([["y"
+                               ,position.y - 1]],
+              position);
+            case "South":
+            return _U.replace([["y"
+                               ,position.y + 1]],
+              position);
+            case "West":
+            return _U.replace([["x"
+                               ,position.x - 1]],
+              position);}
+         _U.badCase($moduleName,
+         "between lines 516 and 520");
+      }();
+   });
+   var tail = function (chars) {
+      return function () {
+         var _v8 = $Array.length(chars);
+         switch (_v8)
+         {case 0: return $Array.empty;}
+         return A3($Array.slice,
+         1,
+         _v8,
+         chars);
+      }();
+   };
+   var rotate = function (characters) {
+      return function () {
+         var _v9 = A2($Array.get,
+         0,
+         characters);
+         switch (_v9.ctor)
+         {case "Just":
+            return $Array.push(_v9._0)(tail(characters));
+            case "Nothing":
+            return characters;}
+         _U.badCase($moduleName,
+         "between lines 509 and 512");
+      }();
+   };
+   var isSomething = function (maybe) {
+      return function () {
+         switch (maybe.ctor)
+         {case "Just": return true;
+            case "Nothing": return false;}
+         _U.badCase($moduleName,
+         "between lines 392 and 394");
+      }();
+   };
+   var distanceToEdgeOfWorld = F2(function (pos,
+   world) {
+      return A2($Basics.min,
+      A2($Basics.min,pos.x,pos.y),
+      A2($Basics.min,
+      world.width - pos.x,
+      world.height - pos.y));
+   });
+   var WorldEdge = {ctor: "WorldEdge"};
+   var Friendly = {ctor: "Friendly"};
+   var Enemy = {ctor: "Enemy"};
+   var parseObj = function (objStr) {
+      return function () {
+         switch (objStr)
+         {case "edge":
+            return $Maybe.Just(WorldEdge);
+            case "enemy":
+            return $Maybe.Just(Enemy);
+            case "friendly":
+            return $Maybe.Just(Friendly);}
+         return $Maybe.Nothing;
+      }();
+   };
+   var isWithinRegex = $Regex.regex("^(enemy|friendly|edge) isWithin (\\d+) (north|south|east|west)?$");
+   var AnErrorOf = function (a) {
+      return {ctor: "AnErrorOf"
+             ,_0: a};
+   };
+   var AnIntentTo = function (a) {
+      return {ctor: "AnIntentTo"
+             ,_0: a};
+   };
+   var isDirectly = F3(function (direction,
+   from,
+   to) {
+      return function () {
+         switch (direction.ctor)
+         {case "East":
+            return _U.eq(from.y,
+              to.y) && _U.cmp(from.x,
+              to.x) < 0;
+            case "North":
+            return _U.eq(from.x,
+              to.x) && _U.cmp(from.y,
+              to.y) > 0;
+            case "South":
+            return _U.eq(from.x,
+              to.x) && _U.cmp(from.y,
+              to.y) < 0;
+            case "West":
+            return _U.eq(from.y,
+              to.y) && _U.cmp(from.x,
+              to.x) > 0;}
+         _U.badCase($moduleName,
+         "between lines 336 and 340");
+      }();
+   });
+   var dist = F2(function (posA,
+   posB) {
+      return $Basics.sqrt($Basics.toFloat(F2(function (x,
+      y) {
+         return x + y;
+      })(Math.pow(posA.y - posB.y,
+      2))(Math.pow(posA.x - posB.x,
+      2))));
+   });
+   var modifySource = F2(function (newSource,
+   model) {
+      return _U.replace([["source"
+                         ,newSource]],
+      model);
+   });
+   var isInWorld = F2(function (world,
+   pos) {
+      return _U.cmp(pos.x,
+      world.width) < 0 && (_U.cmp(pos.y,
+      world.height) < 0 && (_U.cmp(pos.x,
+      0) > -1 && _U.cmp(pos.y,
+      0) > -1));
+   });
+   var Wait = {ctor: "Wait"};
+   var Fire = function (a) {
+      return {ctor: "Fire",_0: a};
+   };
+   var Move = function (a) {
+      return {ctor: "Move",_0: a};
+   };
+   var West = {ctor: "West"};
+   var East = {ctor: "East"};
+   var South = {ctor: "South"};
+   var North = {ctor: "North"};
+   var directionFrom = F2(function (from,
+   to) {
+      return function () {
+         var diffX = to.x - from.x;
+         var diffY = to.y - from.y;
+         return _U.cmp($Basics.abs(diffX),
+         $Basics.abs(diffY)) > 0 ? _U.cmp(diffX,
+         0) > 0 ? East : West : _U.cmp(diffY,
+         0) > 0 ? South : North;
+      }();
+   });
+   var parseDir = function (dir) {
+      return function () {
+         switch (dir)
+         {case "east":
+            return $Maybe.Just(East);
+            case "north":
+            return $Maybe.Just(North);
+            case "south":
+            return $Maybe.Just(South);
+            case "west":
+            return $Maybe.Just(West);}
+         return $Maybe.Nothing;
+      }();
+   };
+   var parseIntent = function (intentStr) {
+      return function () {
+         var _v16 = A2($String.split,
+         " ",
+         intentStr);
+         switch (_v16.ctor)
+         {case "::": switch (_v16._0)
+              {case "fire":
+                 switch (_v16._1.ctor)
+                   {case "::":
+                      switch (_v16._1._1.ctor)
+                        {case "[]":
+                           return A2($Maybe.andThen,
+                             parseDir(_v16._1._0),
+                             function (dir) {
+                                return $Maybe.Just(Fire(dir));
+                             });}
+                        break;}
+                   break;
+                 case "move":
+                 switch (_v16._1.ctor)
+                   {case "::":
+                      switch (_v16._1._1.ctor)
+                        {case "[]":
+                           return A2($Maybe.andThen,
+                             parseDir(_v16._1._0),
+                             function (dir) {
+                                return $Maybe.Just(Move(dir));
+                             });}
+                        break;}
+                   break;
+                 case "wait":
+                 switch (_v16._1.ctor)
+                   {case "[]":
+                      return $Maybe.Just(Wait);}
+                   break;}
+              break;}
+         return $Maybe.Nothing;
+      }();
+   };
+   var NoOp = {ctor: "NoOp"};
+   var updates = $Signal.channel(NoOp);
+   var StepBattle = function (a) {
+      return {ctor: "StepBattle"
+             ,_0: a};
+   };
+   var StartBattle = {ctor: "StartBattle"};
+   var ModifySource = function (a) {
+      return {ctor: "ModifySource"
+             ,_0: a};
+   };
+   var viewTextEditor = function (model) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("panel panel-default fullHeight")
+                   ,$Html$Attributes.style(_L.fromArray([]))]),
+      _L.fromArray([A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("panel-heading")
+                                ,$Html$Attributes.style(_L.fromArray([]))]),
+                   _L.fromArray([A2($Html.h3,
+                   _L.fromArray([$Html$Attributes.$class("panel-title")
+                                ,$Html$Attributes.style(_L.fromArray([]))]),
+                   _L.fromArray([$Html.text("Source code")]))]))
+                   ,A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("panel-body")
+                                ,$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                                      ,_0: "height"
+                                                                      ,_1: "90%"}]))]),
+                   _L.fromArray([A2($Html.textarea,
+                                _L.fromArray([$Html$Attributes.$class("source")
+                                             ,$Html$Attributes.style(_L.fromArray([]))
+                                             ,$Html$Attributes.placeholder("Enter your source code here")
+                                             ,$Html$Attributes.spellcheck(false)
+                                             ,A3($Html$Events.on,
+                                             "change",
+                                             $Html$Events.targetValue,
+                                             function ($) {
+                                                return $Signal.send(updates)(ModifySource($));
+                                             })]),
+                                _L.fromArray([$Html.text(model.source)]))
+                                ,A2($Html.button,
+                                _L.fromArray([$Html$Attributes.$class("btn btn-danger pull-right")
+                                             ,$Html$Attributes.style(_L.fromArray([]))
+                                             ,$Html$Events.onClick(A2($Signal.send,
+                                             updates,
+                                             StartBattle))]),
+                                _L.fromArray([$Html.text("Upload to Drone")]))]))]));
+   };
+   var initialWorld = {_: {}
+                      ,height: 25
+                      ,width: 25};
+   var initialModel = {_: {}
+                      ,executingGame: $Maybe.Nothing
+                      ,gameWorld: initialWorld
+                      ,source: ""
+                      ,sourceError: $Maybe.Nothing};
+   var Model = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,executingGame: d
+             ,gameWorld: c
+             ,source: a
+             ,sourceError: b};
+   });
+   var ExecutingGame = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,characters: b
+             ,programMemory: a
+             ,score: c};
+   });
+   var isGood = function (character) {
+      return function () {
+         switch (character.ctor)
+         {case "Good": return true;}
+         return false;
+      }();
+   };
+   var isEvil = function (character) {
+      return function () {
+         switch (character.ctor)
+         {case "Evil": return true;}
+         return false;
+      }();
+   };
+   var isGameOver = function (model) {
+      return function () {
+         var count = F2(function (test,
+         array) {
+            return A3($Array.foldl,
+            F2(function (x,acc) {
+               return test(x) ? acc + 1 : acc;
+            }),
+            0,
+            array);
+         });
+         var isOnlyOneSideLeft = function (chars) {
+            return function () {
+               var isChaotic = function (x) {
+                  return $Basics.not(isGood(x)) && $Basics.not(isEvil(x));
+               };
+               var isAnyEvil = _U.cmp(A2(count,
+               isEvil,
+               chars),
+               0) > 0;
+               var isAnyGood = _U.cmp(A2(count,
+               isGood,
+               chars),
+               0) > 0;
+               var isAnyChaotic = _U.cmp(A2(count,
+               isChaotic,
+               chars),
+               0) > 0;
+               return function () {
+                  var _v27 = {ctor: "_Tuple3"
+                             ,_0: isAnyGood
+                             ,_1: isAnyEvil
+                             ,_2: isAnyChaotic};
+                  switch (_v27.ctor)
+                  {case "_Tuple3":
+                     switch (_v27._0)
+                       {case false: switch (_v27._1)
+                            {case false: switch (_v27._2)
+                                 {case true: return true;}
+                                 break;
+                               case true: switch (_v27._2)
+                                 {case false: return true;}
+                                 break;}
+                            break;
+                          case true: switch (_v27._1)
+                            {case false: switch (_v27._2)
+                                 {case false: return true;}
+                                 break;}
+                            break;}
+                       break;}
+                  return false;
+               }();
+            }();
+         };
+         return function () {
+            var _v31 = model.executingGame;
+            switch (_v31.ctor)
+            {case "Just":
+               return isOnlyOneSideLeft(_v31._0.characters);
+               case "Nothing": return false;}
+            _U.badCase($moduleName,
+            "between lines 159 and 161");
+         }();
+      }();
+   };
+   var viewGameWorld = function (model) {
+      return function () {
+         var size = 600;
+         var sizeTxt = $Basics.toString(size);
+         var positionToView = function (pos) {
+            return {ctor: "_Tuple2"
+                   ,_0: $Basics.toFloat(pos.x) / $Basics.toFloat(model.gameWorld.width) * size
+                   ,_1: $Basics.toFloat(pos.y) / $Basics.toFloat(model.gameWorld.height) * size};
+         };
+         var drawEntity = F3(function (pos,
+         color,
+         label) {
+            return function () {
+               var charSize = $Basics.toFloat(size) / 100.0;
+               var charSizeTxt = $Basics.toString(charSize);
+               var viewPos = positionToView(pos);
+               var offsetLabel = function (xy) {
+                  return {ctor: "_Tuple2"
+                         ,_0: $Basics.fst(xy) + 2 * charSize
+                         ,_1: $Basics.snd(xy) - charSize};
+               };
+               return _L.fromArray([A2($Svg.rect,
+                                   _L.fromArray([$Svg$Attributes.fill(color)
+                                                ,$Svg$Attributes.width(charSizeTxt)
+                                                ,$Svg$Attributes.height(charSizeTxt)
+                                                ,$Svg$Attributes.x($Basics.toString($Basics.fst(viewPos)))
+                                                ,$Svg$Attributes.y($Basics.toString($Basics.snd(viewPos)))]),
+                                   _L.fromArray([]))
+                                   ,A2($Svg.text,
+                                   _L.fromArray([$Svg$Attributes.fill(color)
+                                                ,$Svg$Attributes.x($Basics.toString($Basics.fst(offsetLabel(viewPos))))
+                                                ,$Svg$Attributes.y($Basics.toString($Basics.snd(offsetLabel(viewPos))))]),
+                                   _L.fromArray([$Html.text(label)]))]);
+            }();
+         });
+         var viewCharacter = function ($char) {
+            return function () {
+               var makeLabelWithHealth = function (entity) {
+                  return A2($Basics._op["++"],
+                  entity.label,
+                  A2($Basics._op["++"],
+                  " - ",
+                  $Basics.toString(entity.health)));
+               };
+               return function () {
+                  switch ($char.ctor)
+                  {case "Chaotic":
+                     return A3(drawEntity,
+                       $char._0.position,
+                       "#ffda34",
+                       makeLabelWithHealth($char._0));
+                     case "Evil":
+                     return A3(drawEntity,
+                       $char._0.position,
+                       "#ff2200",
+                       makeLabelWithHealth($char._0));
+                     case "Good":
+                     return A3(drawEntity,
+                       $char._0.position,
+                       "#149169",
+                       makeLabelWithHealth($char._0));
+                     case "Player":
+                     return A3(drawEntity,
+                       $char._0.position,
+                       "#0bd193",
+                       makeLabelWithHealth($char._0));}
+                  _U.badCase($moduleName,
+                  "between lines 714 and 719");
+               }();
+            }();
+         };
+         var characters = function (m) {
+            return function () {
+               var _v38 = m.executingGame;
+               switch (_v38.ctor)
+               {case "Just":
+                  return $Array.toList(_v38._0.characters);
+                  case "Nothing":
+                  return _L.fromArray([]);}
+               _U.badCase($moduleName,
+               "between lines 721 and 724");
+            }();
+         };
+         var background = A2($Svg.rect,
+         _L.fromArray([$Svg$Attributes.fill("#000000")
+                      ,$Svg$Attributes.width(sizeTxt)
+                      ,$Svg$Attributes.height(sizeTxt)
+                      ,$Svg$Attributes.x("0")
+                      ,$Svg$Attributes.y("0")]),
+         _L.fromArray([]));
+         return A2($Svg.svg,
+         _L.fromArray([$Html$Attributes.$class("world")
+                      ,$Svg$Attributes.width(sizeTxt)
+                      ,$Svg$Attributes.height(sizeTxt)]),
+         isGameOver(model) || isSomething(model.sourceError) ? _L.fromArray([A2($Svg.text,
+         _L.fromArray([$Svg$Attributes.fill("#000000")
+                      ,$Svg$Attributes.x("10")
+                      ,$Svg$Attributes.y("10")]),
+         _L.fromArray([$Html.text(isGameOver(model) ? "Game Over - Try uploading a new program" : function () {
+            var _v40 = model.sourceError;
+            switch (_v40.ctor)
+            {case "Just":
+               return A2($Basics._op["++"],
+                 "Source code error - ",
+                 _v40._0);}
+            return "";
+         }())]))]) : A2($List._op["::"],
+         background,
+         $List.concatMap(viewCharacter)(characters(model))));
+      }();
+   };
+   var view = function (model) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("container-fluid")
+                   ,$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                         ,_0: "height"
+                                                         ,_1: "100vh"}
+                                                        ,{ctor: "_Tuple2"
+                                                         ,_0: "margin"
+                                                         ,_1: "10px"}]))]),
+      _L.fromArray([A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("row fullHeight")
+                   ,$Html$Attributes.style(_L.fromArray([]))]),
+      _L.fromArray([A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("col-md-6 fullHeight")]),
+                   _L.fromArray([viewTextEditor(model)]))
+                   ,A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("col-md-6 fullHeight")]),
+                   _L.fromArray([viewGameWorld(model)]))]))]));
+   };
+   var canMove = function (character) {
+      return function () {
+         switch (character.ctor)
+         {case "Chaotic":
+            return character._0.canMove;
+            case "Evil":
+            return character._0.canMove;
+            case "Good":
+            return character._0.canMove;
+            case "Player":
+            return character._0.canMove;}
+         _U.badCase($moduleName,
+         "between lines 111 and 115");
+      }();
+   };
+   var getHealth = function (c) {
+      return function () {
+         switch (c.ctor)
+         {case "Chaotic":
+            return c._0.health;
+            case "Evil": return c._0.health;
+            case "Good": return c._0.health;
+            case "Player":
+            return c._0.health;}
+         _U.badCase($moduleName,
+         "between lines 103 and 107");
+      }();
+   };
+   var getPosition = function (character) {
+      return function () {
+         switch (character.ctor)
+         {case "Chaotic":
+            return character._0.position;
+            case "Evil":
+            return character._0.position;
+            case "Good":
+            return character._0.position;
+            case "Player":
+            return character._0.position;}
+         _U.badCase($moduleName,
+         "between lines 79 and 83");
+      }();
+   };
+   var nearestWhere = F3(function (check,
+   characters,
+   pos) {
+      return function () {
+         var getClosest = F2(function ($char,
+         maybeOtherChar) {
+            return function () {
+               switch (maybeOtherChar.ctor)
+               {case "Just":
+                  return _U.cmp(dist(pos)(getPosition($char)),
+                    dist(pos)(getPosition(maybeOtherChar._0))) < 0 ? $Maybe.Just($char) : $Maybe.Just(maybeOtherChar._0);
+                  case "Nothing":
+                  return $Maybe.Just($char);}
+               _U.badCase($moduleName,
+               "between lines 314 and 320");
+            }();
+         });
+         return A2($Array.foldl,
+         getClosest,
+         $Maybe.Nothing)($Array.filter(check)(characters));
+      }();
+   });
+   var getIntentWithAI = F3(function ($char,
+   otherChars,
+   world) {
+      return function () {
+         var here = getPosition($char);
+         var attackWhere = function (check) {
+            return function () {
+               var possibleTarget = A2(nearestWhere,
+               check,
+               otherChars)(here);
+               return function () {
+                  switch (possibleTarget.ctor)
+                  {case "Just":
+                     return function () {
+                          var targetPos = getPosition(possibleTarget._0);
+                          var targetDirection = A2(directionFrom,
+                          here,
+                          targetPos);
+                          return _U.eq(A2(dist,
+                          here,
+                          targetPos),
+                          1) ? Fire(targetDirection) : Move(targetDirection);
+                       }();
+                     case "Nothing": return Wait;}
+                  _U.badCase($moduleName,
+                  "between lines 349 and 357");
+               }();
+            }();
+         };
+         return function () {
+            switch ($char.ctor)
+            {case "Chaotic":
+               return attackWhere(function (c) {
+                    return true;
+                 });
+               case "Evil":
+               return attackWhere(function ($) {
+                    return $Basics.not(isEvil($));
+                 });
+               case "Good":
+               return attackWhere(function ($) {
+                    return $Basics.not(isGood($));
+                 });
+               case "Player": return Wait;}
+            _U.badCase($moduleName,
+            "between lines 358 and 362");
+         }();
+      }();
+   });
+   var parseIsWithinCheck = function (checkStr) {
+      return function () {
+         var isWithinFunc = F6(function (object,
+         distance,
+         optDirection,
+         $char,
+         otherChars,
+         world) {
+            return function () {
+               var here = getPosition($char);
+               var distCheck = F3(function (from,
+               maybeChar,
+               distance) {
+                  return function () {
+                     switch (maybeChar.ctor)
+                     {case "Just":
+                        return function () {
+                             var isCloseEnough = F2(function (x,
+                             y) {
+                                return _U.cmp(x,y) > -1;
+                             })($Basics.toFloat(distance))(dist(from)(getPosition(maybeChar._0)));
+                             return function () {
+                                switch (optDirection.ctor)
+                                {case "Just":
+                                   return A2(isDirectly,
+                                     optDirection._0,
+                                     here)(getPosition(maybeChar._0));
+                                   case "Nothing":
+                                   return isCloseEnough;}
+                                _U.badCase($moduleName,
+                                "between lines 406 and 409");
+                             }();
+                          }();
+                        case "Nothing": return false;}
+                     _U.badCase($moduleName,
+                     "between lines 401 and 410");
+                  }();
+               });
+               return function () {
+                  switch (object.ctor)
+                  {case "Enemy":
+                     return A3(distCheck,
+                       here,
+                       A3(nearestWhere,
+                       function ($) {
+                          return $Basics.not(isGood($));
+                       },
+                       otherChars,
+                       here),
+                       distance);
+                     case "Friendly":
+                     return A3(distCheck,
+                       here,
+                       A3(nearestWhere,
+                       isGood,
+                       otherChars,
+                       here),
+                       distance);
+                     case "WorldEdge":
+                     return _U.cmp(A2(distanceToEdgeOfWorld,
+                       here,
+                       world),
+                       distance) < 1;}
+                  _U.badCase($moduleName,
+                  "between lines 411 and 415");
+               }();
+            }();
+         });
+         var buildIsWithinFunc = F3(function (optObjStr,
+         optDistStr,
+         optDirStr) {
+            return function () {
+               var _v71 = {ctor: "_Tuple3"
+                          ,_0: optObjStr
+                          ,_1: optDistStr
+                          ,_2: optDirStr};
+               switch (_v71.ctor)
+               {case "_Tuple3":
+                  switch (_v71._0.ctor)
+                    {case "Just":
+                       switch (_v71._1.ctor)
+                         {case "Just":
+                            switch (_v71._2.ctor)
+                              {case "Just":
+                                 return function () {
+                                      var maybeObj = parseObj(_v71._0._0);
+                                      var maybeDist = $Result.toMaybe($String.toInt(_v71._1._0));
+                                      var maybeDir = parseDir(_v71._2._0);
+                                      return function () {
+                                         var _v78 = {ctor: "_Tuple2"
+                                                    ,_0: maybeObj
+                                                    ,_1: maybeDist};
+                                         switch (_v78.ctor)
+                                         {case "_Tuple2":
+                                            switch (_v78._0.ctor)
+                                              {case "Just":
+                                                 switch (_v78._1.ctor)
+                                                   {case "Just":
+                                                      return $Maybe.Just(A3(isWithinFunc,
+                                                        _v78._0._0,
+                                                        _v78._1._0,
+                                                        maybeDir));}
+                                                   break;}
+                                              break;}
+                                         return $Maybe.Nothing;
+                                      }();
+                                   }();}
+                              break;}
+                         break;}
+                    break;}
+               return $Maybe.Nothing;
+            }();
+         });
+         var handleSubmatches = function (submatches) {
+            return function () {
+               switch (submatches.ctor)
+               {case "::":
+                  switch (submatches._1.ctor)
+                    {case "::":
+                       switch (submatches._1._1.ctor)
+                         {case "::":
+                            switch (submatches._1._1._1.ctor)
+                              {case "[]":
+                                 return A3(buildIsWithinFunc,
+                                   submatches._0,
+                                   submatches._1._0,
+                                   submatches._1._1._0);}
+                              break;}
+                         break;}
+                    break;}
+               return $Maybe.Nothing;
+            }();
+         };
+         return function () {
+            var _v90 = A3($Regex.find,
+            $Regex.AtMost(1),
+            isWithinRegex,
+            checkStr);
+            switch (_v90.ctor)
+            {case "::":
+               switch (_v90._1.ctor)
+                 {case "[]":
+                    return handleSubmatches(_v90._0.submatches);}
+                 break;}
+            return $Maybe.Nothing;
+         }();
+      }();
+   };
+   var parseCheck = function (checkStr) {
+      return function () {
+         var alwaysFunc = F3(function ($char,
+         otherChars,
+         world) {
+            return true;
+         });
+         var neverFunc = F3(function ($char,
+         otherChars,
+         world) {
+            return false;
+         });
+         return _U.eq(checkStr,
+         "always") ? $Maybe.Just(alwaysFunc) : _U.eq(checkStr,
+         "never") ? $Maybe.Just(neverFunc) : A2($Regex.contains,
+         isWithinRegex,
+         checkStr) ? parseIsWithinCheck(checkStr) : $Maybe.Nothing;
+      }();
+   };
+   var getIntentWithProgram = F4(function ($char,
+   otherChars,
+   world,
+   source) {
+      return function () {
+         var lines = A2($String.split,
+         "\n",
+         source);
+         var handleCheckAndIntent = F2(function (checkStr,
+         intentStr) {
+            return function () {
+               var maybeCheck = parseCheck(checkStr);
+               var maybeIntent = parseIntent(intentStr);
+               var checkForIntent = F2(function (check,
+               intent) {
+                  return A3(check,
+                  $char,
+                  otherChars,
+                  world) ? $Maybe.Just(AnIntentTo(intent)) : $Maybe.Nothing;
+               });
+               return function () {
+                  switch (maybeCheck.ctor)
+                  {case "Just":
+                     return function () {
+                          switch (maybeIntent.ctor)
+                          {case "Just":
+                             return A2(checkForIntent,
+                               maybeCheck._0,
+                               maybeIntent._0);
+                             case "Nothing":
+                             return $Maybe.Just(AnErrorOf(A2($Basics._op["++"],
+                               "Broken intent: \'",
+                               A2($Basics._op["++"],
+                               intentStr,
+                               "\'"))));}
+                          _U.badCase($moduleName,
+                          "between lines 477 and 480");
+                       }();
+                     case "Nothing":
+                     return $Maybe.Just(AnErrorOf(A2($Basics._op["++"],
+                       "Broken check: \'",
+                       A2($Basics._op["++"],
+                       checkStr,
+                       "\'"))));}
+                  _U.badCase($moduleName,
+                  "between lines 474 and 480");
+               }();
+            }();
+         });
+         var parseLine = function (line) {
+            return function () {
+               var _v97 = A2($String.split,
+               " when ",
+               line);
+               switch (_v97.ctor)
+               {case "::":
+                  switch (_v97._1.ctor)
+                    {case "::":
+                       switch (_v97._1._1.ctor)
+                         {case "[]":
+                            return A2(handleCheckAndIntent,
+                              _v97._1._0,
+                              _v97._0);}
+                         break;}
+                    break;}
+               return $Maybe.Just(AnErrorOf(A2($Basics._op["++"],
+               "A line is missing \'when\': \'",
+               A2($Basics._op["++"],
+               line,
+               "\'"))));
+            }();
+         };
+         var handleLine = F2(function (line,
+         currentIntent) {
+            return function () {
+               switch (currentIntent.ctor)
+               {case "Nothing":
+                  return parseLine(line);}
+               return currentIntent;
+            }();
+         });
+         var possiblyIntentOrError = $String.isEmpty(source) ? $Maybe.Nothing : A3($List.foldl,
+         handleLine,
+         $Maybe.Nothing,
+         lines);
+         return function () {
+            switch (possiblyIntentOrError.ctor)
+            {case "Just":
+               return possiblyIntentOrError._0;
+               case "Nothing":
+               return AnIntentTo(Wait);}
+            _U.badCase($moduleName,
+            "between lines 497 and 499");
+         }();
+      }();
+   });
+   var isAnyAt = F2(function (characters,
+   position) {
+      return function () {
+         var isAtPosition = F2(function (character,
+         acc) {
+            return F2(function (x,y) {
+               return x || y;
+            })(acc)(F2(function (x,y) {
+               return _U.eq(x,y);
+            })(position)(getPosition(character)));
+         });
+         return A3($Array.foldl,
+         isAtPosition,
+         false,
+         characters);
+      }();
+   });
+   var Evil = function (a) {
+      return {ctor: "Evil",_0: a};
+   };
+   var Chaotic = function (a) {
+      return {ctor: "Chaotic"
+             ,_0: a};
+   };
+   var Good = function (a) {
+      return {ctor: "Good",_0: a};
+   };
+   var Player = function (a) {
+      return {ctor: "Player"
+             ,_0: a};
+   };
+   var setPosition = F2(function (character,
+   newPos) {
+      return function () {
+         switch (character.ctor)
+         {case "Chaotic":
+            return Chaotic(_U.replace([["position"
+                                       ,newPos]],
+              character._0));
+            case "Evil":
+            return Evil(_U.replace([["position"
+                                    ,newPos]],
+              character._0));
+            case "Good":
+            return Good(_U.replace([["position"
+                                    ,newPos]],
+              character._0));
+            case "Player":
+            return Player(_U.replace([["position"
+                                      ,newPos]],
+              character._0));}
+         _U.badCase($moduleName,
+         "between lines 87 and 91");
+      }();
+   });
+   var updateCharacter = F2(function (change,
+   character) {
+      return function () {
+         switch (character.ctor)
+         {case "Chaotic":
+            return Chaotic(change(character._0));
+            case "Evil":
+            return Evil(change(character._0));
+            case "Good":
+            return Good(change(character._0));
+            case "Player":
+            return Player(change(character._0));}
+         _U.badCase($moduleName,
+         "between lines 95 and 99");
+      }();
+   });
+   var hurt = F2(function ($char,
+   damage) {
+      return function () {
+         var hurtEntity = function (e) {
+            return _U.replace([["health"
+                               ,e.health - damage]],
+            e);
+         };
+         var damagedCharacter = A2(updateCharacter,
+         hurtEntity,
+         $char);
+         return _U.cmp(getHealth(damagedCharacter),
+         0) > 0 ? $Maybe.Just(damagedCharacter) : $Maybe.Nothing;
+      }();
+   });
+   var resolveIntent = F3(function (characters,
+   world,
+   source) {
+      return function () {
+         var _v115 = A2($Array.get,
+         0,
+         characters);
+         switch (_v115.ctor)
+         {case "Just":
+            return function () {
+                 var here = getPosition(_v115._0);
+                 var otherCharacters = tail(characters);
+                 var intentOrError = function () {
+                    switch (_v115._0.ctor)
+                    {case "Player":
+                       return $Debug.log("Intent from program")(A4(getIntentWithProgram,
+                         _v115._0,
+                         otherCharacters,
+                         world,
+                         source));}
+                    return AnIntentTo(A3(getIntentWithAI,
+                    _v115._0,
+                    otherCharacters,
+                    world));
+                 }();
+                 return function () {
+                    switch (intentOrError.ctor)
+                    {case "AnErrorOf":
+                       return ErrorOf(intentOrError._0);
+                       case "AnIntentTo":
+                       return function () {
+                            switch (intentOrError._0.ctor)
+                            {case "Fire":
+                               return function () {
+                                    var isInFiringLine = function (otherChar) {
+                                       return A2(isDirectly,
+                                       intentOrError._0._0,
+                                       here)(getPosition(otherChar));
+                                    };
+                                    var possibleCharacterHit = A3(nearestWhere,
+                                    isInFiringLine,
+                                    otherCharacters,
+                                    here);
+                                    var charactersLeft = function () {
+                                       switch (possibleCharacterHit.ctor)
+                                       {case "Just":
+                                          return function () {
+                                               var applyDamage = F2(function (c,
+                                               acc) {
+                                                  return function () {
+                                                     var afterDamage = _U.eq(c,
+                                                     possibleCharacterHit._0) ? hurt(c)(getDamage(_v115._0)) : $Maybe.Just(c);
+                                                     return function () {
+                                                        switch (afterDamage.ctor)
+                                                        {case "Just":
+                                                           return A2($Array.push,
+                                                             afterDamage._0,
+                                                             acc);
+                                                           case "Nothing":
+                                                           return acc;}
+                                                        _U.badCase($moduleName,
+                                                        "between lines 605 and 608");
+                                                     }();
+                                                  }();
+                                               });
+                                               return A3($Array.foldl,
+                                               applyDamage,
+                                               $Array.empty,
+                                               otherCharacters);
+                                            }();
+                                          case "Nothing":
+                                          return otherCharacters;}
+                                       _U.badCase($moduleName,
+                                       "between lines 596 and 610");
+                                    }();
+                                    return Some(A2($Array.push,
+                                    _v115._0,
+                                    charactersLeft));
+                                 }();
+                               case "Move":
+                               return function () {
+                                    var intendedPosition = move(intentOrError._0._0)(here);
+                                    var isValid = function (pos) {
+                                       return A2(isInWorld,
+                                       world,
+                                       pos) && ($Basics.not(A2(isAnyAt,
+                                       characters,
+                                       pos)) && canMove(_v115._0));
+                                    };
+                                    var resultantPosition = isValid(intendedPosition) ? intendedPosition : here;
+                                    var updatedCharacter = A2(setPosition,
+                                    _v115._0,
+                                    resultantPosition);
+                                    return Some(rotate(A3($Array.set,
+                                    0,
+                                    updatedCharacter,
+                                    characters)));
+                                 }();
+                               case "Wait":
+                               return Some(rotate(characters));}
+                            _U.badCase($moduleName,
+                            "between lines 571 and 611");
+                         }();}
+                    _U.badCase($moduleName,
+                    "between lines 568 and 611");
+                 }();
+              }();
+            case "Nothing":
+            return Some(characters);}
+         _U.badCase($moduleName,
+         "between lines 558 and 611");
+      }();
+   });
+   var timeStep = function (model) {
+      return function () {
+         var _v129 = model.executingGame;
+         switch (_v129.ctor)
+         {case "Just":
+            return function () {
+                 var _v131 = A3(resolveIntent,
+                 _v129._0.characters,
+                 model.gameWorld,
+                 model.source);
+                 switch (_v131.ctor)
+                 {case "ErrorOf":
+                    return _U.replace([["sourceError"
+                                       ,$Maybe.Just($Debug.log("Error")(_v131._0))]],
+                      model);
+                    case "Some":
+                    return function () {
+                         var newExecutingGame = _U.replace([["characters"
+                                                            ,_v131._0]],
+                         _v129._0);
+                         return _U.replace([["executingGame"
+                                            ,$Maybe.Just(newExecutingGame)]],
+                         model);
+                      }();}
+                 _U.badCase($moduleName,
+                 "between lines 619 and 626");
+              }();
+            case "Nothing": return model;}
+         _U.badCase($moduleName,
+         "between lines 615 and 626");
+      }();
+   };
+   var Entity = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {_: {}
+             ,canMove: d
+             ,health: b
+             ,label: e
+             ,position: a
+             ,weapon: c};
+   });
+   var Position = F2(function (a,
+   b) {
+      return {_: {},x: a,y: b};
+   });
+   var World = F2(function (a,b) {
+      return {_: {}
+             ,height: b
+             ,width: a};
+   });
+   var Damage = function (a) {
+      return {ctor: "Damage"
+             ,_0: a};
+   };
+   var initialBasicEnemy = function (pos) {
+      return Evil({_: {}
+                  ,canMove: true
+                  ,health: 6
+                  ,label: "Enemy Tank"
+                  ,position: pos
+                  ,weapon: Damage(2)});
+   };
+   var initialBasicChaotic = function (pos) {
+      return Chaotic({_: {}
+                     ,canMove: true
+                     ,health: 2
+                     ,label: "Rogue Soldier"
+                     ,position: pos
+                     ,weapon: Damage(1)});
+   };
+   var initialPlayer = function (pos) {
+      return Player({_: {}
+                    ,canMove: true
+                    ,health: 20
+                    ,label: "Defence Drone"
+                    ,position: pos
+                    ,weapon: Damage(2)});
+   };
+   var Unarmed = {ctor: "Unarmed"};
+   var initialBase = F3(function (pos,
+   name,
+   health) {
+      return Good({_: {}
+                  ,canMove: false
+                  ,health: health
+                  ,label: name
+                  ,position: pos
+                  ,weapon: Unarmed});
+   });
+   var initialCharacters = $Array.fromList(_L.fromArray([initialBasicEnemy({_: {}
+                                                                           ,x: 5
+                                                                           ,y: 5})
+                                                        ,initialBasicChaotic({_: {}
+                                                                             ,x: 1
+                                                                             ,y: 24})
+                                                        ,initialBasicEnemy({_: {}
+                                                                           ,x: 20
+                                                                           ,y: 5})
+                                                        ,initialBasicEnemy({_: {}
+                                                                           ,x: 5
+                                                                           ,y: 20})
+                                                        ,A3(initialBase,
+                                                        {_: {},x: 12,y: 12},
+                                                        "Radar Facility",
+                                                        50)
+                                                        ,A3(initialBase,
+                                                        {_: {},x: 14,y: 23},
+                                                        "Power Station",
+                                                        45)
+                                                        ,initialPlayer({_: {}
+                                                                       ,x: 10
+                                                                       ,y: 8})
+                                                        ,initialBasicChaotic({_: {}
+                                                                             ,x: 20
+                                                                             ,y: 20})
+                                                        ,A3(initialBase,
+                                                        {_: {},x: 18,y: 7},
+                                                        "Hospital",
+                                                        30)]));
+   var initialExecutingGame = {_: {}
+                              ,characters: initialCharacters
+                              ,programMemory: $Array.empty
+                              ,score: $Maybe.Just(0)};
+   var startBattle = function (model) {
+      return _U.replace([["executingGame"
+                         ,$Maybe.Just(initialExecutingGame)]
+                        ,["sourceError"
+                         ,$Maybe.Nothing]],
+      model);
+   };
+   var update = F2(function (action,
+   model) {
+      return function () {
+         switch (action.ctor)
+         {case "ModifySource":
+            return A2(modifySource,
+              action._0,
+              model);
+            case "NoOp": return model;
+            case "StartBattle":
+            return startBattle(model);
+            case "StepBattle":
+            return timeStep(model);}
+         _U.badCase($moduleName,
+         "between lines 630 and 637");
+      }();
+   });
+   var model = A3($Signal.foldp,
+   update,
+   initialModel,
+   A2($Signal.merge,
+   A2($Signal.map,
+   function (t) {
+      return StepBattle(t);
+   },
+   $Time.fps(5)),
+   $Signal.subscribe(updates)));
+   var main = A2($Signal.map,
+   view,
+   model);
+   _elm.Game.values = {_op: _op
+                      ,Unarmed: Unarmed
+                      ,Damage: Damage
+                      ,World: World
+                      ,Position: Position
+                      ,Entity: Entity
+                      ,Player: Player
+                      ,Good: Good
+                      ,Chaotic: Chaotic
+                      ,Evil: Evil
+                      ,getPosition: getPosition
+                      ,setPosition: setPosition
+                      ,updateCharacter: updateCharacter
+                      ,getHealth: getHealth
+                      ,canMove: canMove
+                      ,isEvil: isEvil
+                      ,isGood: isGood
+                      ,ExecutingGame: ExecutingGame
+                      ,Model: Model
+                      ,isGameOver: isGameOver
+                      ,initialWorld: initialWorld
+                      ,initialBasicEnemy: initialBasicEnemy
+                      ,initialBasicChaotic: initialBasicChaotic
+                      ,initialBase: initialBase
+                      ,initialCharacters: initialCharacters
+                      ,initialPlayer: initialPlayer
+                      ,initialExecutingGame: initialExecutingGame
+                      ,initialModel: initialModel
+                      ,ModifySource: ModifySource
+                      ,StartBattle: StartBattle
+                      ,StepBattle: StepBattle
+                      ,NoOp: NoOp
+                      ,North: North
+                      ,South: South
+                      ,East: East
+                      ,West: West
+                      ,Move: Move
+                      ,Fire: Fire
+                      ,Wait: Wait
+                      ,isInWorld: isInWorld
+                      ,modifySource: modifySource
+                      ,startBattle: startBattle
+                      ,dist: dist
+                      ,nearestWhere: nearestWhere
+                      ,directionFrom: directionFrom
+                      ,isDirectly: isDirectly
+                      ,getIntentWithAI: getIntentWithAI
+                      ,AnIntentTo: AnIntentTo
+                      ,AnErrorOf: AnErrorOf
+                      ,isWithinRegex: isWithinRegex
+                      ,Enemy: Enemy
+                      ,Friendly: Friendly
+                      ,WorldEdge: WorldEdge
+                      ,parseObj: parseObj
+                      ,distanceToEdgeOfWorld: distanceToEdgeOfWorld
+                      ,isSomething: isSomething
+                      ,parseIsWithinCheck: parseIsWithinCheck
+                      ,parseCheck: parseCheck
+                      ,parseDir: parseDir
+                      ,parseIntent: parseIntent
+                      ,getIntentWithProgram: getIntentWithProgram
+                      ,tail: tail
+                      ,rotate: rotate
+                      ,move: move
+                      ,Some: Some
+                      ,ErrorOf: ErrorOf
+                      ,isAnyAt: isAnyAt
+                      ,hurt: hurt
+                      ,getDamage: getDamage
+                      ,resolveIntent: resolveIntent
+                      ,timeStep: timeStep
+                      ,update: update
+                      ,viewTextEditor: viewTextEditor
+                      ,viewGameWorld: viewGameWorld
+                      ,view: view
+                      ,main: main
+                      ,model: model
+                      ,updates: updates};
+   return _elm.Game.values;
+};

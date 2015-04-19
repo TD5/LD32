@@ -1,0 +1,6 @@
+{
+    "evancz/virtual-dom": "1.2.2",
+    "evancz/elm-html": "1.1.0",
+    "evancz/elm-svg": "1.0.1",
+    "elm-lang/core": "1.1.1"
+}

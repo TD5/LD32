@@ -1,0 +1,1537 @@
+Elm.Svg = Elm.Svg || {};
+Elm.Svg.Attributes = Elm.Svg.Attributes || {};
+Elm.Svg.Attributes.make = function (_elm) {
+   "use strict";
+   _elm.Svg = _elm.Svg || {};
+   _elm.Svg.Attributes = _elm.Svg.Attributes || {};
+   if (_elm.Svg.Attributes.values)
+   return _elm.Svg.Attributes.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Svg.Attributes",
+   $Svg = Elm.Svg.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var writingMode = function (value) {
+      return A2($VirtualDom.attribute,
+      "writing-mode",
+      value);
+   };
+   var wordSpacing = function (value) {
+      return A2($VirtualDom.attribute,
+      "word-spacing",
+      value);
+   };
+   var visibility = function (value) {
+      return A2($VirtualDom.attribute,
+      "visibility",
+      value);
+   };
+   var unicodeBidi = function (value) {
+      return A2($VirtualDom.attribute,
+      "unicode-bidi",
+      value);
+   };
+   var textRendering = function (value) {
+      return A2($VirtualDom.attribute,
+      "text-rendering",
+      value);
+   };
+   var textDecoration = function (value) {
+      return A2($VirtualDom.attribute,
+      "text-decoration",
+      value);
+   };
+   var textAnchor = function (value) {
+      return A2($VirtualDom.attribute,
+      "text-anchor",
+      value);
+   };
+   var stroke = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke",
+      value);
+   };
+   var strokeWidth = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-width",
+      value);
+   };
+   var strokeOpacity = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-opacity",
+      value);
+   };
+   var strokeMiterlimit = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-miterlimit",
+      value);
+   };
+   var strokeLinejoin = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-linejoin",
+      value);
+   };
+   var strokeLinecap = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-linecap",
+      value);
+   };
+   var strokeDashoffset = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-dashoffset",
+      value);
+   };
+   var strokeDasharray = function (value) {
+      return A2($VirtualDom.attribute,
+      "stroke-dasharray",
+      value);
+   };
+   var stopOpacity = function (value) {
+      return A2($VirtualDom.attribute,
+      "stop-opacity",
+      value);
+   };
+   var stopColor = function (value) {
+      return A2($VirtualDom.attribute,
+      "stop-color",
+      value);
+   };
+   var shapeRendering = function (value) {
+      return A2($VirtualDom.attribute,
+      "shape-rendering",
+      value);
+   };
+   var pointerEvents = function (value) {
+      return A2($VirtualDom.attribute,
+      "pointer-events",
+      value);
+   };
+   var overflow = function (value) {
+      return A2($VirtualDom.attribute,
+      "overflow",
+      value);
+   };
+   var opacity = function (value) {
+      return A2($VirtualDom.attribute,
+      "opacity",
+      value);
+   };
+   var mask = function (value) {
+      return A2($VirtualDom.attribute,
+      "mask",
+      value);
+   };
+   var markerStart = function (value) {
+      return A2($VirtualDom.attribute,
+      "marker-start",
+      value);
+   };
+   var markerMid = function (value) {
+      return A2($VirtualDom.attribute,
+      "marker-mid",
+      value);
+   };
+   var markerEnd = function (value) {
+      return A2($VirtualDom.attribute,
+      "marker-end",
+      value);
+   };
+   var lightingColor = function (value) {
+      return A2($VirtualDom.attribute,
+      "lighting-color",
+      value);
+   };
+   var letterSpacing = function (value) {
+      return A2($VirtualDom.attribute,
+      "letter-spacing",
+      value);
+   };
+   var kerning = function (value) {
+      return A2($VirtualDom.attribute,
+      "kerning",
+      value);
+   };
+   var imageRendering = function (value) {
+      return A2($VirtualDom.attribute,
+      "image-rendering",
+      value);
+   };
+   var glyphOrientationVertical = function (value) {
+      return A2($VirtualDom.attribute,
+      "glyph-orientation-vertical",
+      value);
+   };
+   var glyphOrientationHorizontal = function (value) {
+      return A2($VirtualDom.attribute,
+      "glyph-orientation-horizontal",
+      value);
+   };
+   var fontWeight = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-weight",
+      value);
+   };
+   var fontVariant = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-variant",
+      value);
+   };
+   var fontStyle = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-style",
+      value);
+   };
+   var fontStretch = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-stretch",
+      value);
+   };
+   var fontSize = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-size",
+      value);
+   };
+   var fontSizeAdjust = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-size-adjust",
+      value);
+   };
+   var fontFamily = function (value) {
+      return A2($VirtualDom.attribute,
+      "font-family",
+      value);
+   };
+   var floodOpacity = function (value) {
+      return A2($VirtualDom.attribute,
+      "flood-opacity",
+      value);
+   };
+   var floodColor = function (value) {
+      return A2($VirtualDom.attribute,
+      "flood-color",
+      value);
+   };
+   var filter = function (value) {
+      return A2($VirtualDom.attribute,
+      "filter",
+      value);
+   };
+   var fill = function (value) {
+      return A2($VirtualDom.attribute,
+      "fill",
+      value);
+   };
+   var fillRule = function (value) {
+      return A2($VirtualDom.attribute,
+      "fill-rule",
+      value);
+   };
+   var fillOpacity = function (value) {
+      return A2($VirtualDom.attribute,
+      "fill-opacity",
+      value);
+   };
+   var enableBackground = function (value) {
+      return A2($VirtualDom.attribute,
+      "enable-background",
+      value);
+   };
+   var dominantBaseline = function (value) {
+      return A2($VirtualDom.attribute,
+      "dominant-baseline",
+      value);
+   };
+   var display = function (value) {
+      return A2($VirtualDom.attribute,
+      "display",
+      value);
+   };
+   var direction = function (value) {
+      return A2($VirtualDom.attribute,
+      "direction",
+      value);
+   };
+   var cursor = function (value) {
+      return A2($VirtualDom.attribute,
+      "cursor",
+      value);
+   };
+   var color = function (value) {
+      return A2($VirtualDom.attribute,
+      "color",
+      value);
+   };
+   var colorRendering = function (value) {
+      return A2($VirtualDom.attribute,
+      "color-rendering",
+      value);
+   };
+   var colorProfile = function (value) {
+      return A2($VirtualDom.attribute,
+      "color-profile",
+      value);
+   };
+   var colorInterpolation = function (value) {
+      return A2($VirtualDom.attribute,
+      "color-interpolation",
+      value);
+   };
+   var colorInterpolationFilters = function (value) {
+      return A2($VirtualDom.attribute,
+      "color-interpolation-filters",
+      value);
+   };
+   var clip = function (value) {
+      return A2($VirtualDom.attribute,
+      "clip",
+      value);
+   };
+   var clipRule = function (value) {
+      return A2($VirtualDom.attribute,
+      "clip-rule",
+      value);
+   };
+   var clipPath = function (value) {
+      return A2($VirtualDom.attribute,
+      "clip-path",
+      value);
+   };
+   var baselineShift = function (value) {
+      return A2($VirtualDom.attribute,
+      "baseline-shift",
+      value);
+   };
+   var alignmentBaseline = function (value) {
+      return A2($VirtualDom.attribute,
+      "alignment-baseline",
+      value);
+   };
+   var zoomAndPan = function (value) {
+      return A2($VirtualDom.attribute,
+      "zoomAndPan",
+      value);
+   };
+   var z = function (value) {
+      return A2($VirtualDom.attribute,
+      "z",
+      value);
+   };
+   var yChannelSelector = function (value) {
+      return A2($VirtualDom.attribute,
+      "yChannelSelector",
+      value);
+   };
+   var y2 = function (value) {
+      return A2($VirtualDom.attribute,
+      "y2",
+      value);
+   };
+   var y1 = function (value) {
+      return A2($VirtualDom.attribute,
+      "y1",
+      value);
+   };
+   var y = function (value) {
+      return A2($VirtualDom.attribute,
+      "y",
+      value);
+   };
+   var xmlSpace = function (value) {
+      return A2($VirtualDom.attribute,
+      "xml:space",
+      value);
+   };
+   var xmlLang = function (value) {
+      return A2($VirtualDom.attribute,
+      "xml:lang",
+      value);
+   };
+   var xmlBase = function (value) {
+      return A2($VirtualDom.attribute,
+      "xml:base",
+      value);
+   };
+   var xlinkType = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:type",
+      value);
+   };
+   var xlinkTitle = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:title",
+      value);
+   };
+   var xlinkShow = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:show",
+      value);
+   };
+   var xlinkRole = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:role",
+      value);
+   };
+   var xlinkHref = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:href",
+      value);
+   };
+   var xlinkArcrole = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:arcrole",
+      value);
+   };
+   var xlinkActuate = function (value) {
+      return A2($VirtualDom.attribute,
+      "xlink:actuate",
+      value);
+   };
+   var xChannelSelector = function (value) {
+      return A2($VirtualDom.attribute,
+      "xChannelSelector",
+      value);
+   };
+   var x2 = function (value) {
+      return A2($VirtualDom.attribute,
+      "x2",
+      value);
+   };
+   var x1 = function (value) {
+      return A2($VirtualDom.attribute,
+      "x1",
+      value);
+   };
+   var xHeight = function (value) {
+      return A2($VirtualDom.attribute,
+      "x-height",
+      value);
+   };
+   var x = function (value) {
+      return A2($VirtualDom.attribute,
+      "x",
+      value);
+   };
+   var widths = function (value) {
+      return A2($VirtualDom.attribute,
+      "widths",
+      value);
+   };
+   var width = function (value) {
+      return A2($VirtualDom.attribute,
+      "width",
+      value);
+   };
+   var viewTarget = function (value) {
+      return A2($VirtualDom.attribute,
+      "viewTarget",
+      value);
+   };
+   var viewBox = function (value) {
+      return A2($VirtualDom.attribute,
+      "viewBox",
+      value);
+   };
+   var vertOriginY = function (value) {
+      return A2($VirtualDom.attribute,
+      "vert-origin-y",
+      value);
+   };
+   var vertOriginX = function (value) {
+      return A2($VirtualDom.attribute,
+      "vert-origin-x",
+      value);
+   };
+   var vertAdvY = function (value) {
+      return A2($VirtualDom.attribute,
+      "vert-adv-y",
+      value);
+   };
+   var version = function (value) {
+      return A2($VirtualDom.attribute,
+      "version",
+      value);
+   };
+   var values = function (value) {
+      return A2($VirtualDom.attribute,
+      "values",
+      value);
+   };
+   var vMathematical = function (value) {
+      return A2($VirtualDom.attribute,
+      "v-mathematical",
+      value);
+   };
+   var vIdeographic = function (value) {
+      return A2($VirtualDom.attribute,
+      "v-ideographic",
+      value);
+   };
+   var vHanging = function (value) {
+      return A2($VirtualDom.attribute,
+      "v-hanging",
+      value);
+   };
+   var vAlphabetic = function (value) {
+      return A2($VirtualDom.attribute,
+      "v-alphabetic",
+      value);
+   };
+   var unitsPerEm = function (value) {
+      return A2($VirtualDom.attribute,
+      "units-per-em",
+      value);
+   };
+   var unicodeRange = function (value) {
+      return A2($VirtualDom.attribute,
+      "unicode-range",
+      value);
+   };
+   var unicode = function (value) {
+      return A2($VirtualDom.attribute,
+      "unicode",
+      value);
+   };
+   var underlineThickness = function (value) {
+      return A2($VirtualDom.attribute,
+      "underline-thickness",
+      value);
+   };
+   var underlinePosition = function (value) {
+      return A2($VirtualDom.attribute,
+      "underline-position",
+      value);
+   };
+   var u2 = function (value) {
+      return A2($VirtualDom.attribute,
+      "u2",
+      value);
+   };
+   var u1 = function (value) {
+      return A2($VirtualDom.attribute,
+      "u1",
+      value);
+   };
+   var type$ = function (value) {
+      return A2($VirtualDom.attribute,
+      "type",
+      value);
+   };
+   var transform = function (value) {
+      return A2($VirtualDom.attribute,
+      "transform",
+      value);
+   };
+   var to = function (value) {
+      return A2($VirtualDom.attribute,
+      "to",
+      value);
+   };
+   var title = function (value) {
+      return A2($VirtualDom.attribute,
+      "title",
+      value);
+   };
+   var textLength = function (value) {
+      return A2($VirtualDom.attribute,
+      "textLength",
+      value);
+   };
+   var targetY = function (value) {
+      return A2($VirtualDom.attribute,
+      "targetY",
+      value);
+   };
+   var targetX = function (value) {
+      return A2($VirtualDom.attribute,
+      "targetX",
+      value);
+   };
+   var target = function (value) {
+      return A2($VirtualDom.attribute,
+      "target",
+      value);
+   };
+   var tableValues = function (value) {
+      return A2($VirtualDom.attribute,
+      "tableValues",
+      value);
+   };
+   var systemLanguage = function (value) {
+      return A2($VirtualDom.attribute,
+      "systemLanguage",
+      value);
+   };
+   var surfaceScale = function (value) {
+      return A2($VirtualDom.attribute,
+      "surfaceScale",
+      value);
+   };
+   var style = function (value) {
+      return A2($VirtualDom.attribute,
+      "style",
+      value);
+   };
+   var string = function (value) {
+      return A2($VirtualDom.attribute,
+      "string",
+      value);
+   };
+   var strikethroughThickness = function (value) {
+      return A2($VirtualDom.attribute,
+      "strikethrough-thickness",
+      value);
+   };
+   var strikethroughPosition = function (value) {
+      return A2($VirtualDom.attribute,
+      "strikethrough-position",
+      value);
+   };
+   var stitchTiles = function (value) {
+      return A2($VirtualDom.attribute,
+      "stitchTiles",
+      value);
+   };
+   var stemv = function (value) {
+      return A2($VirtualDom.attribute,
+      "stemv",
+      value);
+   };
+   var stemh = function (value) {
+      return A2($VirtualDom.attribute,
+      "stemh",
+      value);
+   };
+   var stdDeviation = function (value) {
+      return A2($VirtualDom.attribute,
+      "stdDeviation",
+      value);
+   };
+   var startOffset = function (value) {
+      return A2($VirtualDom.attribute,
+      "startOffset",
+      value);
+   };
+   var spreadMethod = function (value) {
+      return A2($VirtualDom.attribute,
+      "spreadMethod",
+      value);
+   };
+   var speed = function (value) {
+      return A2($VirtualDom.attribute,
+      "speed",
+      value);
+   };
+   var specularExponent = function (value) {
+      return A2($VirtualDom.attribute,
+      "specularExponent",
+      value);
+   };
+   var specularConstant = function (value) {
+      return A2($VirtualDom.attribute,
+      "specularConstant",
+      value);
+   };
+   var spacing = function (value) {
+      return A2($VirtualDom.attribute,
+      "spacing",
+      value);
+   };
+   var slope = function (value) {
+      return A2($VirtualDom.attribute,
+      "slope",
+      value);
+   };
+   var seed = function (value) {
+      return A2($VirtualDom.attribute,
+      "seed",
+      value);
+   };
+   var scale = function (value) {
+      return A2($VirtualDom.attribute,
+      "scale",
+      value);
+   };
+   var ry = function (value) {
+      return A2($VirtualDom.attribute,
+      "ry",
+      value);
+   };
+   var rx = function (value) {
+      return A2($VirtualDom.attribute,
+      "rx",
+      value);
+   };
+   var rotate = function (value) {
+      return A2($VirtualDom.attribute,
+      "rotate",
+      value);
+   };
+   var result = function (value) {
+      return A2($VirtualDom.attribute,
+      "result",
+      value);
+   };
+   var restart = function (value) {
+      return A2($VirtualDom.attribute,
+      "restart",
+      value);
+   };
+   var requiredFeatures = function (value) {
+      return A2($VirtualDom.attribute,
+      "requiredFeatures",
+      value);
+   };
+   var requiredExtensions = function (value) {
+      return A2($VirtualDom.attribute,
+      "requiredExtensions",
+      value);
+   };
+   var repeatDur = function (value) {
+      return A2($VirtualDom.attribute,
+      "repeatDur",
+      value);
+   };
+   var repeatCount = function (value) {
+      return A2($VirtualDom.attribute,
+      "repeatCount",
+      value);
+   };
+   var renderingIntent = function (value) {
+      return A2($VirtualDom.attribute,
+      "rendering-intent",
+      value);
+   };
+   var refY = function (value) {
+      return A2($VirtualDom.attribute,
+      "refY",
+      value);
+   };
+   var refX = function (value) {
+      return A2($VirtualDom.attribute,
+      "refX",
+      value);
+   };
+   var radius = function (value) {
+      return A2($VirtualDom.attribute,
+      "radius",
+      value);
+   };
+   var r = function (value) {
+      return A2($VirtualDom.attribute,
+      "r",
+      value);
+   };
+   var primitiveUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "primitiveUnits",
+      value);
+   };
+   var preserveAspectRatio = function (value) {
+      return A2($VirtualDom.attribute,
+      "preserveAspectRatio",
+      value);
+   };
+   var preserveAlpha = function (value) {
+      return A2($VirtualDom.attribute,
+      "preserveAlpha",
+      value);
+   };
+   var pointsAtZ = function (value) {
+      return A2($VirtualDom.attribute,
+      "pointsAtZ",
+      value);
+   };
+   var pointsAtY = function (value) {
+      return A2($VirtualDom.attribute,
+      "pointsAtY",
+      value);
+   };
+   var pointsAtX = function (value) {
+      return A2($VirtualDom.attribute,
+      "pointsAtX",
+      value);
+   };
+   var points = function (value) {
+      return A2($VirtualDom.attribute,
+      "points",
+      value);
+   };
+   var pointOrder = function (value) {
+      return A2($VirtualDom.attribute,
+      "point-order",
+      value);
+   };
+   var patternUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "patternUnits",
+      value);
+   };
+   var patternTransform = function (value) {
+      return A2($VirtualDom.attribute,
+      "patternTransform",
+      value);
+   };
+   var patternContentUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "patternContentUnits",
+      value);
+   };
+   var pathLength = function (value) {
+      return A2($VirtualDom.attribute,
+      "pathLength",
+      value);
+   };
+   var path = function (value) {
+      return A2($VirtualDom.attribute,
+      "path",
+      value);
+   };
+   var panose1 = function (value) {
+      return A2($VirtualDom.attribute,
+      "panose-1",
+      value);
+   };
+   var overlineThickness = function (value) {
+      return A2($VirtualDom.attribute,
+      "overline-thickness",
+      value);
+   };
+   var overlinePosition = function (value) {
+      return A2($VirtualDom.attribute,
+      "overline-position",
+      value);
+   };
+   var origin = function (value) {
+      return A2($VirtualDom.attribute,
+      "origin",
+      value);
+   };
+   var orientation = function (value) {
+      return A2($VirtualDom.attribute,
+      "orientation",
+      value);
+   };
+   var orient = function (value) {
+      return A2($VirtualDom.attribute,
+      "orient",
+      value);
+   };
+   var order = function (value) {
+      return A2($VirtualDom.attribute,
+      "order",
+      value);
+   };
+   var operator = function (value) {
+      return A2($VirtualDom.attribute,
+      "operator",
+      value);
+   };
+   var offset = function (value) {
+      return A2($VirtualDom.attribute,
+      "offset",
+      value);
+   };
+   var numOctaves = function (value) {
+      return A2($VirtualDom.attribute,
+      "numOctaves",
+      value);
+   };
+   var name = function (value) {
+      return A2($VirtualDom.attribute,
+      "name",
+      value);
+   };
+   var mode = function (value) {
+      return A2($VirtualDom.attribute,
+      "mode",
+      value);
+   };
+   var min = function (value) {
+      return A2($VirtualDom.attribute,
+      "min",
+      value);
+   };
+   var method = function (value) {
+      return A2($VirtualDom.attribute,
+      "method",
+      value);
+   };
+   var media = function (value) {
+      return A2($VirtualDom.attribute,
+      "media",
+      value);
+   };
+   var max = function (value) {
+      return A2($VirtualDom.attribute,
+      "max",
+      value);
+   };
+   var mathematical = function (value) {
+      return A2($VirtualDom.attribute,
+      "mathematical",
+      value);
+   };
+   var maskUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "maskUnits",
+      value);
+   };
+   var maskContentUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "maskContentUnits",
+      value);
+   };
+   var markerWidth = function (value) {
+      return A2($VirtualDom.attribute,
+      "markerWidth",
+      value);
+   };
+   var markerUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "markerUnits",
+      value);
+   };
+   var markerHeight = function (value) {
+      return A2($VirtualDom.attribute,
+      "markerHeight",
+      value);
+   };
+   var local = function (value) {
+      return A2($VirtualDom.attribute,
+      "local",
+      value);
+   };
+   var limitingConeAngle = function (value) {
+      return A2($VirtualDom.attribute,
+      "limitingConeAngle",
+      value);
+   };
+   var lengthAdjust = function (value) {
+      return A2($VirtualDom.attribute,
+      "lengthAdjust",
+      value);
+   };
+   var lang = function (value) {
+      return A2($VirtualDom.attribute,
+      "lang",
+      value);
+   };
+   var keyTimes = function (value) {
+      return A2($VirtualDom.attribute,
+      "keyTimes",
+      value);
+   };
+   var keySplines = function (value) {
+      return A2($VirtualDom.attribute,
+      "keySplines",
+      value);
+   };
+   var keyPoints = function (value) {
+      return A2($VirtualDom.attribute,
+      "keyPoints",
+      value);
+   };
+   var kernelUnitLength = function (value) {
+      return A2($VirtualDom.attribute,
+      "kernelUnitLength",
+      value);
+   };
+   var kernelMatrix = function (value) {
+      return A2($VirtualDom.attribute,
+      "kernelMatrix",
+      value);
+   };
+   var k4 = function (value) {
+      return A2($VirtualDom.attribute,
+      "k4",
+      value);
+   };
+   var k3 = function (value) {
+      return A2($VirtualDom.attribute,
+      "k3",
+      value);
+   };
+   var k2 = function (value) {
+      return A2($VirtualDom.attribute,
+      "k2",
+      value);
+   };
+   var k1 = function (value) {
+      return A2($VirtualDom.attribute,
+      "k1",
+      value);
+   };
+   var k = function (value) {
+      return A2($VirtualDom.attribute,
+      "k",
+      value);
+   };
+   var intercept = function (value) {
+      return A2($VirtualDom.attribute,
+      "intercept",
+      value);
+   };
+   var in2 = function (value) {
+      return A2($VirtualDom.attribute,
+      "in2",
+      value);
+   };
+   var in$ = function (value) {
+      return A2($VirtualDom.attribute,
+      "in",
+      value);
+   };
+   var ideographic = function (value) {
+      return A2($VirtualDom.attribute,
+      "ideographic",
+      value);
+   };
+   var id = function (value) {
+      return A2($VirtualDom.attribute,
+      "id",
+      value);
+   };
+   var horizOriginY = function (value) {
+      return A2($VirtualDom.attribute,
+      "horiz-origin-y",
+      value);
+   };
+   var horizOriginX = function (value) {
+      return A2($VirtualDom.attribute,
+      "horiz-origin-x",
+      value);
+   };
+   var horizAdvX = function (value) {
+      return A2($VirtualDom.attribute,
+      "horiz-adv-x",
+      value);
+   };
+   var height = function (value) {
+      return A2($VirtualDom.attribute,
+      "height",
+      value);
+   };
+   var hanging = function (value) {
+      return A2($VirtualDom.attribute,
+      "hanging",
+      value);
+   };
+   var gradientUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "gradientUnits",
+      value);
+   };
+   var gradientTransform = function (value) {
+      return A2($VirtualDom.attribute,
+      "gradientTransform",
+      value);
+   };
+   var glyphRef = function (value) {
+      return A2($VirtualDom.attribute,
+      "glyphRef",
+      value);
+   };
+   var glyphName = function (value) {
+      return A2($VirtualDom.attribute,
+      "glyph-name",
+      value);
+   };
+   var g2 = function (value) {
+      return A2($VirtualDom.attribute,
+      "g2",
+      value);
+   };
+   var g1 = function (value) {
+      return A2($VirtualDom.attribute,
+      "g1",
+      value);
+   };
+   var fy = function (value) {
+      return A2($VirtualDom.attribute,
+      "fy",
+      value);
+   };
+   var fx = function (value) {
+      return A2($VirtualDom.attribute,
+      "fx",
+      value);
+   };
+   var from = function (value) {
+      return A2($VirtualDom.attribute,
+      "from",
+      value);
+   };
+   var format = function (value) {
+      return A2($VirtualDom.attribute,
+      "format",
+      value);
+   };
+   var filterUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "filterUnits",
+      value);
+   };
+   var filterRes = function (value) {
+      return A2($VirtualDom.attribute,
+      "filterRes",
+      value);
+   };
+   var externalResourcesRequired = function (value) {
+      return A2($VirtualDom.attribute,
+      "externalResourcesRequired",
+      value);
+   };
+   var exponent = function (value) {
+      return A2($VirtualDom.attribute,
+      "exponent",
+      value);
+   };
+   var end = function (value) {
+      return A2($VirtualDom.attribute,
+      "end",
+      value);
+   };
+   var elevation = function (value) {
+      return A2($VirtualDom.attribute,
+      "elevation",
+      value);
+   };
+   var edgeMode = function (value) {
+      return A2($VirtualDom.attribute,
+      "edgeMode",
+      value);
+   };
+   var dy = function (value) {
+      return A2($VirtualDom.attribute,
+      "dy",
+      value);
+   };
+   var dx = function (value) {
+      return A2($VirtualDom.attribute,
+      "dx",
+      value);
+   };
+   var dur = function (value) {
+      return A2($VirtualDom.attribute,
+      "dur",
+      value);
+   };
+   var divisor = function (value) {
+      return A2($VirtualDom.attribute,
+      "divisor",
+      value);
+   };
+   var diffuseConstant = function (value) {
+      return A2($VirtualDom.attribute,
+      "diffuseConstant",
+      value);
+   };
+   var descent = function (value) {
+      return A2($VirtualDom.attribute,
+      "descent",
+      value);
+   };
+   var decelerate = function (value) {
+      return A2($VirtualDom.attribute,
+      "decelerate",
+      value);
+   };
+   var d = function (value) {
+      return A2($VirtualDom.attribute,
+      "d",
+      value);
+   };
+   var cy = function (value) {
+      return A2($VirtualDom.attribute,
+      "cy",
+      value);
+   };
+   var cx = function (value) {
+      return A2($VirtualDom.attribute,
+      "cx",
+      value);
+   };
+   var contentStyleType = function (value) {
+      return A2($VirtualDom.attribute,
+      "contentStyleType",
+      value);
+   };
+   var contentScriptType = function (value) {
+      return A2($VirtualDom.attribute,
+      "contentScriptType",
+      value);
+   };
+   var clipPathUnits = function (value) {
+      return A2($VirtualDom.attribute,
+      "clipPathUnits",
+      value);
+   };
+   var $class = function (value) {
+      return A2($VirtualDom.attribute,
+      "class",
+      value);
+   };
+   var capHeight = function (value) {
+      return A2($VirtualDom.attribute,
+      "cap-height",
+      value);
+   };
+   var calcMode = function (value) {
+      return A2($VirtualDom.attribute,
+      "calcMode",
+      value);
+   };
+   var by = function (value) {
+      return A2($VirtualDom.attribute,
+      "by",
+      value);
+   };
+   var bias = function (value) {
+      return A2($VirtualDom.attribute,
+      "bias",
+      value);
+   };
+   var begin = function (value) {
+      return A2($VirtualDom.attribute,
+      "begin",
+      value);
+   };
+   var bbox = function (value) {
+      return A2($VirtualDom.attribute,
+      "bbox",
+      value);
+   };
+   var baseProfile = function (value) {
+      return A2($VirtualDom.attribute,
+      "baseProfile",
+      value);
+   };
+   var baseFrequency = function (value) {
+      return A2($VirtualDom.attribute,
+      "baseFrequency",
+      value);
+   };
+   var azimuth = function (value) {
+      return A2($VirtualDom.attribute,
+      "azimuth",
+      value);
+   };
+   var autoReverse = function (value) {
+      return A2($VirtualDom.attribute,
+      "autoReverse",
+      value);
+   };
+   var attributeType = function (value) {
+      return A2($VirtualDom.attribute,
+      "attributeType",
+      value);
+   };
+   var attributeName = function (value) {
+      return A2($VirtualDom.attribute,
+      "attributeName",
+      value);
+   };
+   var ascent = function (value) {
+      return A2($VirtualDom.attribute,
+      "ascent",
+      value);
+   };
+   var arabicForm = function (value) {
+      return A2($VirtualDom.attribute,
+      "arabic-form",
+      value);
+   };
+   var amplitude = function (value) {
+      return A2($VirtualDom.attribute,
+      "amplitude",
+      value);
+   };
+   var allowReorder = function (value) {
+      return A2($VirtualDom.attribute,
+      "allowReorder",
+      value);
+   };
+   var alphabetic = function (value) {
+      return A2($VirtualDom.attribute,
+      "alphabetic",
+      value);
+   };
+   var additive = function (value) {
+      return A2($VirtualDom.attribute,
+      "additive",
+      value);
+   };
+   var accumulate = function (value) {
+      return A2($VirtualDom.attribute,
+      "accumulate",
+      value);
+   };
+   var accelerate = function (value) {
+      return A2($VirtualDom.attribute,
+      "accelerate",
+      value);
+   };
+   var accentHeight = function (value) {
+      return A2($VirtualDom.attribute,
+      "accent-height",
+      value);
+   };
+   _elm.Svg.Attributes.values = {_op: _op
+                                ,accentHeight: accentHeight
+                                ,accelerate: accelerate
+                                ,accumulate: accumulate
+                                ,additive: additive
+                                ,alphabetic: alphabetic
+                                ,allowReorder: allowReorder
+                                ,amplitude: amplitude
+                                ,arabicForm: arabicForm
+                                ,ascent: ascent
+                                ,attributeName: attributeName
+                                ,attributeType: attributeType
+                                ,autoReverse: autoReverse
+                                ,azimuth: azimuth
+                                ,baseFrequency: baseFrequency
+                                ,baseProfile: baseProfile
+                                ,bbox: bbox
+                                ,begin: begin
+                                ,bias: bias
+                                ,by: by
+                                ,calcMode: calcMode
+                                ,capHeight: capHeight
+                                ,$class: $class
+                                ,clipPathUnits: clipPathUnits
+                                ,contentScriptType: contentScriptType
+                                ,contentStyleType: contentStyleType
+                                ,cx: cx
+                                ,cy: cy
+                                ,d: d
+                                ,decelerate: decelerate
+                                ,descent: descent
+                                ,diffuseConstant: diffuseConstant
+                                ,divisor: divisor
+                                ,dur: dur
+                                ,dx: dx
+                                ,dy: dy
+                                ,edgeMode: edgeMode
+                                ,elevation: elevation
+                                ,end: end
+                                ,exponent: exponent
+                                ,externalResourcesRequired: externalResourcesRequired
+                                ,filterRes: filterRes
+                                ,filterUnits: filterUnits
+                                ,format: format
+                                ,from: from
+                                ,fx: fx
+                                ,fy: fy
+                                ,g1: g1
+                                ,g2: g2
+                                ,glyphName: glyphName
+                                ,glyphRef: glyphRef
+                                ,gradientTransform: gradientTransform
+                                ,gradientUnits: gradientUnits
+                                ,hanging: hanging
+                                ,height: height
+                                ,horizAdvX: horizAdvX
+                                ,horizOriginX: horizOriginX
+                                ,horizOriginY: horizOriginY
+                                ,id: id
+                                ,ideographic: ideographic
+                                ,in$: in$
+                                ,in2: in2
+                                ,intercept: intercept
+                                ,k: k
+                                ,k1: k1
+                                ,k2: k2
+                                ,k3: k3
+                                ,k4: k4
+                                ,kernelMatrix: kernelMatrix
+                                ,kernelUnitLength: kernelUnitLength
+                                ,keyPoints: keyPoints
+                                ,keySplines: keySplines
+                                ,keyTimes: keyTimes
+                                ,lang: lang
+                                ,lengthAdjust: lengthAdjust
+                                ,limitingConeAngle: limitingConeAngle
+                                ,local: local
+                                ,markerHeight: markerHeight
+                                ,markerUnits: markerUnits
+                                ,markerWidth: markerWidth
+                                ,maskContentUnits: maskContentUnits
+                                ,maskUnits: maskUnits
+                                ,mathematical: mathematical
+                                ,max: max
+                                ,media: media
+                                ,method: method
+                                ,min: min
+                                ,mode: mode
+                                ,name: name
+                                ,numOctaves: numOctaves
+                                ,offset: offset
+                                ,operator: operator
+                                ,order: order
+                                ,orient: orient
+                                ,orientation: orientation
+                                ,origin: origin
+                                ,overlinePosition: overlinePosition
+                                ,overlineThickness: overlineThickness
+                                ,panose1: panose1
+                                ,path: path
+                                ,pathLength: pathLength
+                                ,patternContentUnits: patternContentUnits
+                                ,patternTransform: patternTransform
+                                ,patternUnits: patternUnits
+                                ,pointOrder: pointOrder
+                                ,points: points
+                                ,pointsAtX: pointsAtX
+                                ,pointsAtY: pointsAtY
+                                ,pointsAtZ: pointsAtZ
+                                ,preserveAlpha: preserveAlpha
+                                ,preserveAspectRatio: preserveAspectRatio
+                                ,primitiveUnits: primitiveUnits
+                                ,r: r
+                                ,radius: radius
+                                ,refX: refX
+                                ,refY: refY
+                                ,renderingIntent: renderingIntent
+                                ,repeatCount: repeatCount
+                                ,repeatDur: repeatDur
+                                ,requiredExtensions: requiredExtensions
+                                ,requiredFeatures: requiredFeatures
+                                ,restart: restart
+                                ,result: result
+                                ,rotate: rotate
+                                ,rx: rx
+                                ,ry: ry
+                                ,scale: scale
+                                ,seed: seed
+                                ,slope: slope
+                                ,spacing: spacing
+                                ,specularConstant: specularConstant
+                                ,specularExponent: specularExponent
+                                ,speed: speed
+                                ,spreadMethod: spreadMethod
+                                ,startOffset: startOffset
+                                ,stdDeviation: stdDeviation
+                                ,stemh: stemh
+                                ,stemv: stemv
+                                ,stitchTiles: stitchTiles
+                                ,strikethroughPosition: strikethroughPosition
+                                ,strikethroughThickness: strikethroughThickness
+                                ,string: string
+                                ,style: style
+                                ,surfaceScale: surfaceScale
+                                ,systemLanguage: systemLanguage
+                                ,tableValues: tableValues
+                                ,target: target
+                                ,targetX: targetX
+                                ,targetY: targetY
+                                ,textLength: textLength
+                                ,title: title
+                                ,to: to
+                                ,transform: transform
+                                ,type$: type$
+                                ,u1: u1
+                                ,u2: u2
+                                ,underlinePosition: underlinePosition
+                                ,underlineThickness: underlineThickness
+                                ,unicode: unicode
+                                ,unicodeRange: unicodeRange
+                                ,unitsPerEm: unitsPerEm
+                                ,vAlphabetic: vAlphabetic
+                                ,vHanging: vHanging
+                                ,vIdeographic: vIdeographic
+                                ,vMathematical: vMathematical
+                                ,values: values
+                                ,version: version
+                                ,vertAdvY: vertAdvY
+                                ,vertOriginX: vertOriginX
+                                ,vertOriginY: vertOriginY
+                                ,viewBox: viewBox
+                                ,viewTarget: viewTarget
+                                ,width: width
+                                ,widths: widths
+                                ,x: x
+                                ,xHeight: xHeight
+                                ,x1: x1
+                                ,x2: x2
+                                ,xChannelSelector: xChannelSelector
+                                ,xlinkActuate: xlinkActuate
+                                ,xlinkArcrole: xlinkArcrole
+                                ,xlinkHref: xlinkHref
+                                ,xlinkRole: xlinkRole
+                                ,xlinkShow: xlinkShow
+                                ,xlinkTitle: xlinkTitle
+                                ,xlinkType: xlinkType
+                                ,xmlBase: xmlBase
+                                ,xmlLang: xmlLang
+                                ,xmlSpace: xmlSpace
+                                ,y: y
+                                ,y1: y1
+                                ,y2: y2
+                                ,yChannelSelector: yChannelSelector
+                                ,z: z
+                                ,zoomAndPan: zoomAndPan
+                                ,alignmentBaseline: alignmentBaseline
+                                ,baselineShift: baselineShift
+                                ,clipPath: clipPath
+                                ,clipRule: clipRule
+                                ,clip: clip
+                                ,colorInterpolationFilters: colorInterpolationFilters
+                                ,colorInterpolation: colorInterpolation
+                                ,colorProfile: colorProfile
+                                ,colorRendering: colorRendering
+                                ,color: color
+                                ,cursor: cursor
+                                ,direction: direction
+                                ,display: display
+                                ,dominantBaseline: dominantBaseline
+                                ,enableBackground: enableBackground
+                                ,fillOpacity: fillOpacity
+                                ,fillRule: fillRule
+                                ,fill: fill
+                                ,filter: filter
+                                ,floodColor: floodColor
+                                ,floodOpacity: floodOpacity
+                                ,fontFamily: fontFamily
+                                ,fontSizeAdjust: fontSizeAdjust
+                                ,fontSize: fontSize
+                                ,fontStretch: fontStretch
+                                ,fontStyle: fontStyle
+                                ,fontVariant: fontVariant
+                                ,fontWeight: fontWeight
+                                ,glyphOrientationHorizontal: glyphOrientationHorizontal
+                                ,glyphOrientationVertical: glyphOrientationVertical
+                                ,imageRendering: imageRendering
+                                ,kerning: kerning
+                                ,letterSpacing: letterSpacing
+                                ,lightingColor: lightingColor
+                                ,markerEnd: markerEnd
+                                ,markerMid: markerMid
+                                ,markerStart: markerStart
+                                ,mask: mask
+                                ,opacity: opacity
+                                ,overflow: overflow
+                                ,pointerEvents: pointerEvents
+                                ,shapeRendering: shapeRendering
+                                ,stopColor: stopColor
+                                ,stopOpacity: stopOpacity
+                                ,strokeDasharray: strokeDasharray
+                                ,strokeDashoffset: strokeDashoffset
+                                ,strokeLinecap: strokeLinecap
+                                ,strokeLinejoin: strokeLinejoin
+                                ,strokeMiterlimit: strokeMiterlimit
+                                ,strokeOpacity: strokeOpacity
+                                ,strokeWidth: strokeWidth
+                                ,stroke: stroke
+                                ,textAnchor: textAnchor
+                                ,textDecoration: textDecoration
+                                ,textRendering: textRendering
+                                ,unicodeBidi: unicodeBidi
+                                ,visibility: visibility
+                                ,wordSpacing: wordSpacing
+                                ,writingMode: writingMode};
+   return _elm.Svg.Attributes.values;
+};
