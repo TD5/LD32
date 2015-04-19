@@ -1,4 +1,4 @@
-# LD32
+# A Game of Drones
 My entry for Ludum Dare 32 - An Unconventional Weapon
 
 Current game idea:
