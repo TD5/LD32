@@ -240,8 +240,8 @@ rotate characters = -- Moves the first element to the back of the queue
     case get 0 characters of
         Nothing -> characters
         Just first ->
-            let n = length characters in
-            let tail = slice 1 (n - 1) characters in
+            let n = length characters |> Debug.log "# characters" in
+            let tail = slice 1 n characters in
             push first tail
 
 move : Direction -> Position -> Position
