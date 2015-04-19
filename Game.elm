@@ -314,10 +314,61 @@ type IntentOrSourceError
     = AnIntentTo Intent
     | AnErrorOf SourceError
 
+parseCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
+parseCheck checkStr = -- Tries to parse a checking function from a string
+    -- TODO
+    Nothing
+
+parseIntent : String -> Maybe Intent
+parseIntent intentStr = -- Tries to parse an intent
+    let parseDir dir =
+        case dir of
+            "north" -> Just North
+            "south" -> Just South
+            "east"  -> Just East
+            "west"  -> Just West
+            _       -> Nothing
+    in
+    case String.split " " intentStr of
+        "wait" :: []           -> Just Wait
+        "move" :: dirStr :: [] -> Maybe.andThen (parseDir dirStr) (\dir -> Just (Move dir))
+        "fire" :: dirStr :: [] -> Maybe.andThen (parseDir dirStr) (\dir -> Just (Fire dir))
+        _                      -> Nothing
+
 getIntentWithProgram : Character -> Array Character -> World -> ProgramSource -> IntentOrSourceError
 getIntentWithProgram char otherChars model source =
-    AnIntentTo Wait
-    -- TODO Use Dandandan's parser here
+    let lines = String.split "\n" source in
+    let handleCheckAndIntent checkStr intentStr = 
+        let maybeCheck = parseCheck checkStr in -- Possibly some func for testing game state
+        let maybeIntent = parseIntent intentStr in -- Possibly an Intent: Move North, Fire East, Wait etc
+        let checkForIntent check intent = -- Applies a check to maybe yield an intent depending of whether the test passes
+            if check char otherChars model.world
+                then Just (AnIntentTo intent)
+                else Nothing
+        in
+        case maybeCheck of
+            Nothing -> Just (AnErrorOf "Broken check")
+            Just check ->
+                case maybeIntent of
+                    Nothing -> Just (AnErrorOf "Broken intent")
+                    Just intent -> checkForIntent check intent
+    in
+    let parseLine line = -- Takes a line and gives a Maybe IntentOrSourceError
+        -- Assumes line of format "<check> then <intent>"
+        case String.split " then " line of
+            checkStr :: intentStr :: [] -> 
+                handleCheckAndIntent checkStr intentStr
+            _ -> Just (AnErrorOf "A line is missing 'then'")
+    in
+    let handleLine line currentIntent =
+        case currentIntent of
+            Nothing -> parseLine line
+            x       -> x -- We already have some output
+    in
+    let possiblyIntentOrError = List.foldl handleLine Nothing lines in
+    case possiblyIntentOrError of
+        Nothing -> AnIntentTo Wait
+        Just x  -> x
 {-
     if | source == "move north" -> AnIntentTo (Move North)
        | source == "move south" -> AnIntentTo (Move South)
