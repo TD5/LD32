@@ -458,11 +458,14 @@ viewGameWorld model =
         ]
     in
     let viewCharacter char =
+        let makeLabelWithHealth entity =
+            entity.label ++ " - " ++ (toString entity.health)
+        in
         case char of
-            Player e  -> drawEntity e.position "#0bd193" e.label
-            Good e    -> drawEntity e.position "#149169" e.label
-            Chaotic e -> drawEntity e.position "#ffda34" e.label
-            Evil e    -> drawEntity e.position "#ff2200" e.label
+            Player e  -> drawEntity e.position "#0bd193" (makeLabelWithHealth e)
+            Good e    -> drawEntity e.position "#149169" (makeLabelWithHealth e)
+            Chaotic e -> drawEntity e.position "#ffda34" (makeLabelWithHealth e)
+            Evil e    -> drawEntity e.position "#ff2200" (makeLabelWithHealth e)
     in
     let characters m =
         case m.executingGame of
