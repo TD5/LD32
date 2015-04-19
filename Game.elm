@@ -397,7 +397,7 @@ viewGameWorld model =
         , Svg.Attributes.width sizeTxt
         , Svg.Attributes.height sizeTxt
         ]
-        (background :: (characters |> List.concatMap viewCharacter))
+        (background :: (model |> characters |> List.concatMap viewCharacter))
 
 view : Model -> Html
 view model =
