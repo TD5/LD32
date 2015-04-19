@@ -283,7 +283,7 @@ isDirectly direction from to =
         North -> from.x == to.x && from.y > to.y
         South -> from.x == to.x && from.y < to.y
         East  -> from.y == to.y && from.x < to.x
-        West  -> from.y == to.y && from.y > to.x
+        West  -> from.y == to.y && from.x > to.x
 
 getIntentWithAI : Character -> Array Character -> World -> Intent
 getIntentWithAI char otherChars world =
