@@ -87,6 +87,22 @@ setPosition character newPos =
         Chaotic e -> Chaotic { e | position <- newPos }
         Evil e    -> Evil    { e | position <- newPos }
 
+updateCharacter : (Entity -> Entity) -> Character -> Character
+updateCharacter change character =
+    case character of
+        Player e  -> Player (change e)
+        Good e    -> Good (change e)
+        Chaotic e -> Chaotic (change e)
+        Evil e    -> Evil (change e)
+
+getHealth : Character -> Int
+getHealth c =
+    case c of
+        Player e  -> e.health
+        Good e    -> e.health
+        Chaotic e -> e.health
+        Evil e    -> e.health
+
 canMove : Character -> Bool
 canMove character =
     case character of
@@ -322,6 +338,29 @@ isAnyAt characters position = -- Returns true if any character is already at the
     in
     foldl isAtPosition False characters
 
+hurt : Character -> Int -> Maybe Character
+hurt char damage =
+    let hurtEntity e =
+        { e | health <- e.health - damage }
+    in
+    let damagedCharacter = updateCharacter hurtEntity char in
+        if getHealth damagedCharacter > 0
+        then Just damagedCharacter
+        else Nothing
+
+getDamage : Character -> Int
+getDamage c =
+    let weapon =
+        case c of
+            Player e  -> e.weapon
+            Good e    -> e.weapon
+            Chaotic e -> e.weapon
+            Evil e    -> e.weapon
+    in
+       case weapon of
+           Unarmed  -> 0
+           Damage x -> x
+
 resolveIntent : Array Character -> World -> UpdatedCharactersOrSourceError
 resolveIntent characters world =
     case get 0 characters of
@@ -356,7 +395,18 @@ resolveIntent characters world =
                     let charactersLeft =
                         case possibleCharacterHit of
                             Nothing  -> otherCharacters
-                            Just hit -> filter (not << (==) hit) otherCharacters
+                            Just hit ->
+                                let applyDamage c acc =
+                                    let afterDamage =
+                                        if (c == hit)
+                                        then getDamage thisCharacter |> hurt c 
+                                        else Just c
+                                    in
+                                    case afterDamage of
+                                        Nothing -> acc
+                                        Just d -> push d acc
+                                in
+                                foldl applyDamage empty otherCharacters
                     in
                     Some (push thisCharacter charactersLeft)
 
