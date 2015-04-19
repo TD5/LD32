@@ -87,6 +87,14 @@ setPosition character newPos =
         Chaotic e -> Chaotic { e | position <- newPos }
         Evil e    -> Evil    { e | position <- newPos }
 
+canMove : Character -> Bool
+canMove character =
+    case character of
+        Player e  -> e.canMove
+        Good e    -> e.canMove
+        Chaotic e -> e.canMove
+        Evil e    -> e.canMove
+
 type alias ExecutingGame =
     { programMemory : ProgramMemory
     , characters    : Array Character -- In order of priority to perform an action
@@ -256,6 +264,13 @@ type UpdatedCharactersOrSourceError
     = Some (Array Character)
     | ErrorOf SourceError
 
+isAnyAt : Array Character -> Position -> Bool
+isAnyAt characters position = -- Returns true if any character is already at the given position
+    let isAtPosition character acc =
+        getPosition character |> (==) position |> (||) acc
+    in
+    foldl isAtPosition False characters
+
 resolveIntent : Array Character -> World -> UpdatedCharactersOrSourceError
 resolveIntent characters world =
     case get 0 characters of
@@ -267,9 +282,13 @@ resolveIntent characters world =
                 Wait -> Some (rotate characters) -- The character has forfeited their turn
                 Move direction ->
                     let intendedPosition = thisCharacterPos |> move direction in
-                    -- TODO Check for collisions with other entities
+                    let isValid pos =
+                        isInWorld world pos &&
+                        (isAnyAt characters pos |> not) &&
+                        canMove thisCharacter
+                    in
                     let resultantPosition = 
-                        if isInWorld world intendedPosition -- TODO And can move (make way to apply etity func to char?)
+                        if isValid intendedPosition
                            then intendedPosition 
                            else thisCharacterPos 
                     in
