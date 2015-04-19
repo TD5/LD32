@@ -140,6 +140,26 @@ type alias Model = -- The full state of the game at any point in time
     , executingGame  : Maybe ExecutingGame
     }
 
+isGameOver : Model -> Bool
+isGameOver model =
+    let count test array =
+        foldl (\x acc -> if test x then acc + 1 else acc ) 0 array
+    in
+    let isOnlyOneSideLeft chars =
+        let isChaotic x = (isGood x |> not) && (isEvil x |> not) in
+        let isAnyEvil = count isEvil chars > 0 in
+        let isAnyGood = count isGood chars > 0 in
+        let isAnyChaotic = count isChaotic chars > 0 in
+        case (isAnyGood, isAnyEvil, isAnyChaotic) of
+            (True, False, False) -> True
+            (False, True, False) -> True
+            (False, False, True) -> True
+            _                    -> False
+    in
+    case model.executingGame of
+        Nothing   -> False
+        Just game -> isOnlyOneSideLeft game.characters
+
 initialWorld : World
 initialWorld = 
     { width  = 25
@@ -696,7 +716,23 @@ viewGameWorld model =
         , Svg.Attributes.width sizeTxt
         , Svg.Attributes.height sizeTxt
         ]
-        (background :: (model |> characters |> List.concatMap viewCharacter))
+        (if isGameOver model || isSomething model.sourceError
+             then 
+                [ Svg.text
+                    [ Svg.Attributes.fill "#000000"
+                    , Svg.Attributes.x "10"
+                    , Svg.Attributes.y "10"
+                    ]
+                    [ text 
+                        (if isGameOver model
+                            then "Game Over - Try uploading a new program"
+                            else 
+                                case model.sourceError of
+                                    Just error -> "Source code error - " ++ error
+                                    _          -> "")
+                    ]
+                ]
+             else (background :: (model |> characters |> List.concatMap viewCharacter)))
 
 view : Model -> Html
 view model =
