@@ -19,6 +19,8 @@ import Json.Decode as Json
 import List
 import Maybe
 import Random
+import Regex
+import Result
 import Signal
 import String
 import Svg
@@ -314,24 +316,68 @@ type IntentOrSourceError
     = AnIntentTo Intent
     | AnErrorOf SourceError
 
+isWithinRegex : Regex.Regex
+isWithinRegex = Regex.regex "^if (enemy|friendly|edge) isWithin (\\d+) (north|south|east|west)?$"
+
+type Object
+    = Enemy
+    | Friendly
+    | WorldEdge
+
+parseObj : String -> Maybe Object
+parseObj objStr =
+    case objStr of
+        "enemy"    -> Just Enemy
+        "friendly" -> Just Friendly
+        "edge"     -> Just WorldEdge
+        _          -> Nothing
+
+parseIsWithinCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
+parseIsWithinCheck checkStr =
+    let isWithinFunc object distance direction char otherChars world =
+        True -- TODO
+    in
+    let buildIsWithinFunc optObjStr optDistStr optDirStr =
+        case (optObjStr, optDistStr, optDirStr) of
+            (Just objStr, Just distStr, Just dirStr) ->
+                let maybeObj = parseObj objStr in
+                let maybeDist = String.toInt distStr |> Result.toMaybe in
+                let maybeDir = parseDir dirStr in
+                case (maybeObj, maybeDist, maybeDir) of
+                    (Just obj, Just dist, Just dir) ->
+                        Just (isWithinFunc obj dist dir)
+                    _ -> Nothing
+            _ -> Nothing
+    in
+    let handleSubmatches submatches =
+        case submatches of
+            obj :: dist :: dir :: [] -> buildIsWithinFunc obj dist dir
+            _ -> Nothing
+    in
+    case Regex.find (Regex.AtMost 1) isWithinRegex checkStr of
+        match :: [] -> handleSubmatches match.submatches
+        _           -> Nothing
+
 parseCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
 parseCheck checkStr = -- Tries to parse a checking function from a string
     let alwaysFunc char otherChars world = True in
     let neverFunc char otherChars world = False in
     if | checkStr == "always" -> Just alwaysFunc -- Always matches
        | checkStr == "never"  -> Just neverFunc -- Never matches
+       | Regex.contains isWithinRegex checkStr -> parseIsWithinCheck checkStr
        | otherwise -> Nothing -- Failure, syntax error in check string
+
+parseDir : String -> Maybe Direction
+parseDir dir =
+    case dir of
+        "north" -> Just North
+        "south" -> Just South
+        "east"  -> Just East
+        "west"  -> Just West
+        _       -> Nothing
 
 parseIntent : String -> Maybe Intent
 parseIntent intentStr = -- Tries to parse an intent
-    let parseDir dir =
-        case dir of
-            "north" -> Just North
-            "south" -> Just South
-            "east"  -> Just East
-            "west"  -> Just West
-            _       -> Nothing
-    in
     case String.split " " intentStr of
         "wait" :: []           -> Just Wait
         "move" :: dirStr :: [] -> Maybe.andThen (parseDir dirStr) (\dir -> Just (Move dir))
@@ -372,18 +418,6 @@ getIntentWithProgram char otherChars world source =
     case possiblyIntentOrError of
         Nothing -> AnIntentTo Wait
         Just x  -> x
-{-
-    if | source == "move north" -> AnIntentTo (Move North)
-       | source == "move south" -> AnIntentTo (Move South)
-       | source == "move east"  -> AnIntentTo (Move East)
-       | source == "move west"  -> AnIntentTo (Move West)
-       | source == "fire north" -> AnIntentTo (Fire North)
-       | source == "fire south" -> AnIntentTo (Fire South)
-       | source == "fire east"  -> AnIntentTo (Fire East)
-       | source == "fire west"  -> AnIntentTo (Fire West)
-       | source == "wait"       -> AnIntentTo Wait
-       | otherwise              -> AnErrorOf "Unrecognised command"
--}
 
 tail : Array Character -> Array Character
 tail chars = 
