@@ -273,8 +273,27 @@ isInWorld world pos =
 
 modifySource : ProgramSource -> Model -> Model
 modifySource newSource model =
-    -- TODO Syntax checking?
     { model | source <- newSource }
+    {-
+    -- No real world needed, just enough to make the program attempt to do something
+    let lines = String.split "\n" newSource in
+    let examplePlayer = initialPlayer { x = 0, y = 0 } in
+    let attemptToGetIntent someSource = 
+        getIntentWithProgram examplePlayer empty initialWorld someSource
+    in
+    let checkAttemptAcc line acc =
+        case acc of
+            Nothing ->
+                let intentOrError = attemptToGetIntent line in
+                case intentOrError of
+                    AnIntentTo _        -> Nothing
+                    AnErrorOf errorMsg  -> Just errorMsg
+            Just errorMsg -> errorMsg
+    in
+    let maybeError = List.foldl checkAttemptAcc Nothing lines in
+    { model | sourceError <- maybeError
+            , source <- newSource 
+    }-}
 
 startBattle : Model -> Model
 startBattle model  =
