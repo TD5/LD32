@@ -31,6 +31,7 @@ import Window
 
 ---- MODEL ----
 type alias ProgramSource = String
+type alias SourceError = String
 
 {-
 The player can store an array of numbers between executions of their code.
@@ -64,20 +65,28 @@ type alias Entity = -- An actor in the gameworld
     }
 
 type Character -- An entity with an alignment to a team
-    = PlayerControlled Entity
+    = Player Entity -- Player controlled entities
     | Good Entity -- Won't attack player or other good entities
     | Chaotic Entity -- Will attack anything, even other chaotics
     | Evil Entity -- Won't attack other evil entities
 
+getPosition : Character -> Position
+getPosition character =
+    case character of
+        Player e  -> e.position
+        Good e    -> e.position
+        Chaotic e -> e.position
+        Evil e    -> e.position
+
 type alias ExecutingGame =
     { programMemory : ProgramMemory
-    , characters    : List Character -- In order of priority to perform an action
+    , characters    : Array Character -- In order of priority to perform an action
     , score         : Maybe Int
     }
 
 type alias Model = -- The full state of the game at any point in time
     { source         : ProgramSource
-    , sourceError    : Maybe String
+    , sourceError    : Maybe SourceError
     , gameWorld      : World
     , executingGame  : Maybe ExecutingGame
     }
@@ -120,19 +129,20 @@ initialBase pos =
         , label    = "Radar Facility"
         }
 
-initialCharacters : List Character
+initialCharacters : Array Character
 initialCharacters =
-    [ initialBasicEnemy   { x = 5,  y = 5  }
-    , initialBasicEnemy   { x = 20, y = 5  }
-    , initialBasicEnemy   { x = 5,  y = 20 }
-    , initialBase         { x = 12, y = 12 }
-    , initialPlayer       { x = 10, y = 8  }
-    , initialBasicChaotic { x = 20, y = 20 }
-    ]
+    fromList
+        [ initialBasicEnemy   { x = 5,  y = 5  }
+        , initialBasicEnemy   { x = 20, y = 5  }
+        , initialBasicEnemy   { x = 5,  y = 20 }
+        , initialBase         { x = 12, y = 12 }
+        , initialPlayer       { x = 10, y = 8  }
+        , initialBasicChaotic { x = 20, y = 20 }
+        ]
 
 initialPlayer : Position -> Character
 initialPlayer pos = 
-    PlayerControlled
+    Player
         { position = pos
         , health   = 20
         , weapon   = Damage 2
@@ -197,25 +207,28 @@ modifySource newSource model =
 startBattle : Model -> Model
 startBattle model  =
     { model | executingGame <- Just initialExecutingGame }
-{-
-getIntentWithAI : Character -> Model -> Intent
+
+getIntentWithAI : Character -> World -> Intent
 getIntentWithAI char model =
     -- TODO Add some basic AI here
     Wait
 
-getIntentWithProgram : Character -> Model -> Intent
-getIntentWithProgram char model =
+type IntentOrSourceError
+    = AnIntentTo Intent
+    | AnErrorOf SourceError
+
+getIntentWithProgram : Character -> World -> ProgramSource -> IntentOrSourceError
+getIntentWithProgram char model source =
     -- TODO Interpret player's code to see what to do next
-    Wait
+    AnIntentTo Wait
 
 rotate : Array Character -> Array Character
 rotate characters = -- Moves the first element to the back of the array
-    case length of
-        0 -> characters
-        1 -> characters
-        _ -> 
-            let first = get 0 characters in
-            let tail = slice 1 (length characters |> (-) 1) in
+    case get 0 characters of
+        Nothing -> characters
+        Just first ->
+            let n = length characters in
+            let tail = slice 1 (n - 1) characters in
             push first tail
 
 move : Direction -> Position -> Position
@@ -226,24 +239,30 @@ move direction position =
         West  -> { position | x <- position.x - 1 }
         East  -> { position | x <- position.x + 1 }
 
-resolveIntent : List Character -> World -> List Character
+type UpdatedCharactersOrSourceError
+    = Some Array Character
+    | ErrorOf SourceError
+
+resolveIntent : Array Character -> World -> UpdatedCharactersOrSourceError
 resolveIntent characters world =
-    let nextCharacter = get 0 characters in
-    let intent = getIntentWithAI nextCharacter model in
-    case intent of
-        Move direction ->
-            let intendedPosition = (move direction nextCharacter.position) in
-            let updatedCharacter = 
-                { nextCharacter | position <- -- TODO Check for collisions with other entities
-                    if isInWorld intendedPosition then intendedPosition else nextCharacter.position }
-            in
-            rotate (set 0 updatedCharacter characters)
-        Fire direction ->
-            -- TODO Damage nearest enemy in direction of fire
-            -- TODO Rotate self to back of queue
-            rotate characters
-        Wait -> rotate characters
--}
+    case get 0 characters of
+        Nothing -> characters -- Nothing to do
+        Just nextCharacter ->
+            let intent = getIntentWithAI nextCharacter world in
+            case intent of
+                Move direction ->
+                    let intendedPosition = (move direction nextCharacter.position) in
+                    let updatedCharacter = 
+                        { nextCharacter | position <- -- TODO Check for collisions with other entities
+                            if isInWorld intendedPosition then intendedPosition else nextCharacter.position }
+                    in
+                    Some (set 0 updatedCharacter characters |> rotate)
+                Fire direction ->
+                    -- TODO Damage nearest enemy in direction of fire
+                    -- TODO Rotate self to back of queue
+                    Some (rotate characters)
+                Wait -> Some (rotate characters)
+
 timeStep : Model -> Model
 timeStep model =
     case model.executingGame of
@@ -339,7 +358,7 @@ viewGameWorld model =
     in
     let viewCharacter char =
         case char of
-            PlayerControlled e -> drawEntity e.position "#0bd193" e.label
+            Player e -> drawEntity e.position "#0bd193" e.label
             Good e -> drawEntity e.position "#149169" e.label
             Chaotic e -> drawEntity e.position "#ffda34" e.label
             Evil e -> drawEntity e.position "#ff2200" e.label
