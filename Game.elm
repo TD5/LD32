@@ -246,22 +246,27 @@ type UpdatedCharactersOrSourceError
 resolveIntent : Array Character -> World -> UpdatedCharactersOrSourceError
 resolveIntent characters world =
     case get 0 characters of
-        Nothing -> characters -- Nothing to do
+        Nothing -> Some characters -- Nothing to do
         Just nextCharacter ->
             let intent = getIntentWithAI nextCharacter world in
             case intent of
+                Wait -> Some (rotate characters) -- The character has forfeited their turn
                 Move direction ->
                     let intendedPosition = (move direction nextCharacter.position) in
+                    -- TODO Check for collisions with other entities
+                    let resultantPosition = 
+                        if isInWorld world intendedPosition 
+                           then intendedPosition 
+                           else nextCharacter.position 
+                    in
                     let updatedCharacter = 
-                        { nextCharacter | position <- -- TODO Check for collisions with other entities
-                            if isInWorld intendedPosition then intendedPosition else nextCharacter.position }
+                        { nextCharacter | position <- resultantPosition }
                     in
                     Some (set 0 updatedCharacter characters |> rotate)
                 Fire direction ->
                     -- TODO Damage nearest enemy in direction of fire
                     -- TODO Rotate self to back of queue
                     Some (rotate characters)
-                Wait -> Some (rotate characters)
 
 timeStep : Model -> Model
 timeStep model =
@@ -358,15 +363,15 @@ viewGameWorld model =
     in
     let viewCharacter char =
         case char of
-            Player e -> drawEntity e.position "#0bd193" e.label
-            Good e -> drawEntity e.position "#149169" e.label
+            Player e  -> drawEntity e.position "#0bd193" e.label
+            Good e    -> drawEntity e.position "#149169" e.label
             Chaotic e -> drawEntity e.position "#ffda34" e.label
-            Evil e -> drawEntity e.position "#ff2200" e.label
+            Evil e    -> drawEntity e.position "#ff2200" e.label
     in
-    let characters =
-        case model.executingGame of
-            Nothing -> []
-            Just exeGame -> exeGame.characters
+    let characters m =
+        case m.executingGame of
+            Nothing -> empty
+            Just eg -> toList eg.characters
     in
     let background =
         Svg.rect
