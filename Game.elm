@@ -303,8 +303,16 @@ type IntentOrSourceError
 
 getIntentWithProgram : Character -> Array Character -> World -> ProgramSource -> IntentOrSourceError
 getIntentWithProgram char otherChars model source =
-    -- TODO Interpret player's code to see what to do next
-    AnIntentTo Wait
+    if | source == "move north" -> AnIntentTo (Move North)
+       | source == "move south" -> AnIntentTo (Move South)
+       | source == "move east"  -> AnIntentTo (Move East)
+       | source == "move west"  -> AnIntentTo (Move West)
+       | source == "fire north" -> AnIntentTo (Fire North)
+       | source == "fire south" -> AnIntentTo (Fire South)
+       | source == "fire east"  -> AnIntentTo (Fire East)
+       | source == "fire west"  -> AnIntentTo (Fire West)
+       | source == "wait"       -> AnIntentTo Wait
+       | otherwise              -> AnErrorOf "Unrecognised command"
 
 tail : Array Character -> Array Character
 tail chars = 
@@ -361,54 +369,60 @@ getDamage c =
            Unarmed  -> 0
            Damage x -> x
 
-resolveIntent : Array Character -> World -> UpdatedCharactersOrSourceError
-resolveIntent characters world =
+resolveIntent : Array Character -> World -> ProgramSource -> UpdatedCharactersOrSourceError
+resolveIntent characters world source =
     case get 0 characters of
         Nothing -> Some characters -- Nothing to do
         Just thisCharacter ->
             let here = getPosition thisCharacter in
             let otherCharacters = tail characters in
-            let intent = getIntentWithAI thisCharacter otherCharacters world in
-            case intent of
-                Wait -> Some (rotate characters) -- The character has forfeited their turn
-                Move direction ->
-                    let intendedPosition = here |> move direction in
-                    let isValid pos =
-                        isInWorld world pos &&
-                        (isAnyAt characters pos |> not) &&
-                        canMove thisCharacter
-                    in
-                    let resultantPosition = 
-                        if isValid intendedPosition
-                           then intendedPosition 
-                           else here 
-                    in
-                    let updatedCharacter = setPosition thisCharacter resultantPosition
-                    in
-                    Some (set 0 updatedCharacter characters |> rotate)
-                Fire firingDirection ->
-                    let directionTo char = directionFrom here (getPosition char) in
-                    let possibleCharacterHit =
-                        nearestWhere (\otherChar -> (directionTo otherChar) == firingDirection) otherCharacters here
-                    in
-                    -- TODO Damage but don't necessarily always destroy
-                    let charactersLeft =
-                        case possibleCharacterHit of
-                            Nothing  -> otherCharacters
-                            Just hit ->
-                                let applyDamage c acc =
-                                    let afterDamage =
-                                        if (c == hit)
-                                        then getDamage thisCharacter |> hurt c 
-                                        else Just c
-                                    in
-                                    case afterDamage of
-                                        Nothing -> acc
-                                        Just d -> push d acc
-                                in
-                                foldl applyDamage empty otherCharacters
-                    in
-                    Some (push thisCharacter charactersLeft)
+            let intentOrError = 
+                case thisCharacter of
+                    Player _ -> getIntentWithProgram thisCharacter otherCharacters world source 
+                    _        -> AnIntentTo (getIntentWithAI thisCharacter otherCharacters world)
+            in
+            case intentOrError of
+                AnErrorOf e -> ErrorOf e
+                AnIntentTo intent ->
+                    case intent of
+                        Wait -> Some (rotate characters) -- The character has forfeited their turn
+                        Move direction ->
+                            let intendedPosition = here |> move direction in
+                            let isValid pos =
+                                isInWorld world pos &&
+                                (isAnyAt characters pos |> not) &&
+                                canMove thisCharacter
+                            in
+                            let resultantPosition = 
+                                if isValid intendedPosition
+                                   then intendedPosition 
+                                   else here 
+                            in
+                            let updatedCharacter = setPosition thisCharacter resultantPosition
+                            in
+                            Some (set 0 updatedCharacter characters |> rotate)
+                        Fire firingDirection ->
+                            let directionTo char = directionFrom here (getPosition char) in
+                            let possibleCharacterHit =
+                                nearestWhere (\otherChar -> (directionTo otherChar) == firingDirection) otherCharacters here
+                            in
+                            let charactersLeft =
+                                case possibleCharacterHit of
+                                    Nothing  -> otherCharacters
+                                    Just hit ->
+                                        let applyDamage c acc =
+                                            let afterDamage =
+                                                if (c == hit)
+                                                then getDamage thisCharacter |> hurt c 
+                                                else Just c
+                                            in
+                                            case afterDamage of
+                                                Nothing -> acc
+                                                Just d -> push d acc
+                                        in
+                                        foldl applyDamage empty otherCharacters
+                            in
+                            Some (push thisCharacter charactersLeft)
 
 timeStep : Model -> Model
 timeStep model =
@@ -416,7 +430,7 @@ timeStep model =
         Nothing -> 
             model -- If the game isn't executing, we don't need to step
         Just executingGame ->
-            case resolveIntent executingGame.characters model.gameWorld of
+            case resolveIntent executingGame.characters model.gameWorld model.source of
                 Some newCharacters -> 
                     let newExecutingGame =
                         { executingGame | characters <- newCharacters } 
