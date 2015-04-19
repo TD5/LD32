@@ -10,6 +10,7 @@ goal is to keep as many friendly units alive for as long as possible.
 -}
 
 import Array (..)
+import Basics
 import Debug
 import Html (..)
 import Html.Attributes (..)
@@ -118,6 +119,13 @@ isEvil character =
     case character of
         Evil c -> True
         _      -> False
+
+isGood : Character -> Bool
+isGood character =
+    case character of
+        Good c -> True
+        _      -> False
+
 
 type alias ExecutingGame =
     { programMemory : ProgramMemory
@@ -308,7 +316,7 @@ getIntentWithAI char otherChars world =
     in
     case char of
         Player e  -> Wait
-        Good e    -> attackWhere isEvil  
+        Good e    -> attackWhere (not << isGood)  
         Chaotic e -> attackWhere (\c -> True)
         Evil e    -> attackWhere (not << isEvil)
 
@@ -332,10 +340,27 @@ parseObj objStr =
         "edge"     -> Just WorldEdge
         _          -> Nothing
 
+distanceToEdgeOfWorld : Position -> World -> Int
+distanceToEdgeOfWorld pos world =
+    Basics.min 
+        (Basics.min pos.x pos.y) 
+        (Basics.min (world.width - pos.x) (world.height - pos.y))
+
+isSomething : Maybe a -> Bool
+isSomething maybe =
+    case maybe of
+        Just _  -> True
+        Nothing -> False
+
 parseIsWithinCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
 parseIsWithinCheck checkStr =
     let isWithinFunc object distance direction char otherChars world =
-        True -- TODO
+        let here = getPosition char in
+        case object of
+            WorldEdge -> distanceToEdgeOfWorld here world <= distance
+            -- TODO Check distance
+            Enemy     -> isSomething (nearestWhere (not << isGood) otherChars here)
+            Friendly  -> isSomething (nearestWhere isGood otherChars here)
     in
     let buildIsWithinFunc optObjStr optDistStr optDirStr =
         case (optObjStr, optDistStr, optDirStr) of
