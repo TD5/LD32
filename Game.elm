@@ -277,6 +277,14 @@ directionFrom from to =
        | otherwise ->
         if diffY > 0 then South else North
 
+isDirectly : Direction -> Position -> Position -> Bool
+isDirectly direction from to =
+    case direction of
+        North -> from.x == to.x && from.y > to.y
+        South -> from.x == to.x && from.y < to.y
+        East  -> from.y == to.y && from.x < to.x
+        West  -> from.y == to.y && from.y > to.x
+
 getIntentWithAI : Character -> Array Character -> World -> Intent
 getIntentWithAI char otherChars world =
     let here = getPosition char in
@@ -402,9 +410,11 @@ resolveIntent characters world source =
                             in
                             Some (set 0 updatedCharacter characters |> rotate)
                         Fire firingDirection ->
-                            let directionTo char = directionFrom here (getPosition char) in
+                            let isInFiringLine otherChar =
+                                getPosition otherChar |> isDirectly firingDirection here
+                            in
                             let possibleCharacterHit =
-                                nearestWhere (\otherChar -> (directionTo otherChar) == firingDirection) otherCharacters here
+                                nearestWhere isInFiringLine otherCharacters here
                             in
                             let charactersLeft =
                                 case possibleCharacterHit of
