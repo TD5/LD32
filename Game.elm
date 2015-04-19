@@ -263,7 +263,6 @@ directionFrom from to =
 
 getIntentWithAI : Character -> Array Character -> World -> Intent
 getIntentWithAI char otherChars world =
-    -- TODO Add some basic AI here
     let here = getPosition char in
     case char of
         Player e  -> Wait
@@ -274,8 +273,13 @@ getIntentWithAI char otherChars world =
                 e.position |> nearestWhere (not << isEvil) otherChars 
             in
                case possibleTarget of
-                   Just target -> Move (target |> getPosition |> directionFrom here)
-                   Nothing     -> Wait
+                   Nothing -> Wait
+                   Just target -> 
+                       let targetPos = getPosition target in
+                       let targetDirection = directionFrom here targetPos in
+                       if dist here targetPos == 1
+                          then Fire targetDirection
+                          else Move targetDirection
 
 type IntentOrSourceError
     = AnIntentTo Intent
