@@ -288,22 +288,24 @@ isDirectly direction from to =
 getIntentWithAI : Character -> Array Character -> World -> Intent
 getIntentWithAI char otherChars world =
     let here = getPosition char in
+    let attackWhere check =
+        let possibleTarget = 
+            here |> nearestWhere check otherChars 
+        in
+        case possibleTarget of
+            Nothing -> Wait
+            Just target -> 
+                let targetPos = getPosition target in
+                let targetDirection = directionFrom here targetPos in
+                if dist here targetPos == 1
+                    then Fire targetDirection
+                    else Move targetDirection
+    in
     case char of
         Player e  -> Wait
-        Good e    -> Move South -- TODO Find nearest evil and move towards it then shoot when near
-        Chaotic e -> Wait -- TODO Move and shoot randomly?
-        Evil e    ->
-            let possibleTarget = 
-                e.position |> nearestWhere (not << isEvil) otherChars 
-            in
-               case possibleTarget of
-                   Nothing -> Wait
-                   Just target -> 
-                       let targetPos = getPosition target in
-                       let targetDirection = directionFrom here targetPos in
-                       if dist here targetPos == 1
-                          then Fire targetDirection
-                          else Move targetDirection
+        Good e    -> attackWhere isEvil  
+        Chaotic e -> attackWhere (\c -> True)
+        Evil e    -> attackWhere (not << isEvil)
 
 type IntentOrSourceError
     = AnIntentTo Intent
