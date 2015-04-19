@@ -95,6 +95,12 @@ canMove character =
         Chaotic e -> e.canMove
         Evil e    -> e.canMove
 
+isEvil : Character -> Bool
+isEvil character =
+    case character of
+        Evil c -> True
+        _      -> False
+
 type alias ExecutingGame =
     { programMemory : ProgramMemory
     , characters    : Array Character -- In order of priority to perform an action
@@ -225,14 +231,35 @@ startBattle : Model -> Model
 startBattle model  =
     { model | executingGame <- Just initialExecutingGame }
 
+dist : Position -> Position -> Float
+dist posA posB =
+    (posA.x - posB.x) ^ 2
+    |> (+) ((posA.y - posB.y) ^ 2)
+    |> toFloat
+    |> sqrt
+
+nearestWhere : (Character -> Bool) -> Array Character -> Position -> Maybe Character
+nearestWhere check characters pos =
+    let getClosest char maybeOtherChar =
+        case maybeOtherChar of
+            Nothing -> Just char
+            Just otherChar ->
+                if (getPosition char |> dist pos) < (getPosition otherChar |> dist pos)
+                   then Just char
+                   else Just otherChar
+    in
+    characters 
+    |> filter check 
+    |> foldl getClosest Nothing 
+
 getIntentWithAI : Character -> World -> Intent
 getIntentWithAI char model =
     -- TODO Add some basic AI here
     case char of
-        Player e  -> Move North
-        Good e    -> Move South
-        Chaotic e -> Move East
-        Evil e    -> Move West
+        Player e  -> Wait
+        Good e    -> Move South -- TODO Find nearest evil and move towards it then shoot when near
+        Chaotic e -> Wait -- TODO Move and shoot randomly?
+        Evil e    -> Move West -- TODO Move towards player and shoot
 
 type IntentOrSourceError
     = AnIntentTo Intent
