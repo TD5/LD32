@@ -252,41 +252,52 @@ nearestWhere check characters pos =
     |> filter check 
     |> foldl getClosest Nothing 
 
-direction : Position -> Position -> Direction
-direction from to =
+directionFrom : Position -> Position -> Direction
+directionFrom from to =
     let diffX = to.x - from.x in
     let diffY = to.y - from.y in
     if | abs diffX > abs diffY ->
         if diffX > 0 then East else West
        | otherwise ->
-        if diffY > 0 then North else South
+        if diffY > 0 then South else North
 
-getIntentWithAI : Character -> World -> Intent
-getIntentWithAI char model =
+getIntentWithAI : Character -> Array Character -> World -> Intent
+getIntentWithAI char otherChars world =
     -- TODO Add some basic AI here
+    let here = getPosition char in
     case char of
         Player e  -> Wait
         Good e    -> Move South -- TODO Find nearest evil and move towards it then shoot when near
         Chaotic e -> Wait -- TODO Move and shoot randomly?
-        Evil e    -> Move West -- TODO Move towards player and shoot
+        Evil e    ->
+            let possibleTarget = 
+                e.position |> nearestWhere (not << isEvil) otherChars 
+            in
+               case possibleTarget of
+                   Just target -> Move (target |> getPosition |> directionFrom here)
+                   Nothing     -> Wait
 
 type IntentOrSourceError
     = AnIntentTo Intent
     | AnErrorOf SourceError
 
-getIntentWithProgram : Character -> World -> ProgramSource -> IntentOrSourceError
-getIntentWithProgram char model source =
+getIntentWithProgram : Character -> Array Character -> World -> ProgramSource -> IntentOrSourceError
+getIntentWithProgram char otherChars model source =
     -- TODO Interpret player's code to see what to do next
     AnIntentTo Wait
+
+tail : Array Character -> Array Character
+tail chars = 
+    case length chars of
+        0 -> empty
+        n -> slice 1 n chars
 
 rotate : Array Character -> Array Character
 rotate characters = -- Moves the first element to the back of the queue
     case get 0 characters of
         Nothing -> characters
         Just first ->
-            let n = length characters in
-            let tail = slice 1 n characters in
-            push first tail
+            tail characters |> push first 
 
 move : Direction -> Position -> Position
 move direction position =
@@ -313,7 +324,7 @@ resolveIntent characters world =
         Nothing -> Some characters -- Nothing to do
         Just thisCharacter ->
             let thisCharacterPos = getPosition thisCharacter in
-            let intent = getIntentWithAI thisCharacter world in
+            let intent = getIntentWithAI thisCharacter (tail characters) world in
             case intent of
                 Wait -> Some (rotate characters) -- The character has forfeited their turn
                 Move direction ->
