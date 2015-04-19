@@ -316,10 +316,10 @@ type IntentOrSourceError
 
 parseCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
 parseCheck checkStr = -- Tries to parse a checking function from a string
-    let otherwiseFunc char otherChars world = True in
-    let ignoreFunc char otherChars world = False in
-    if | checkStr == "otherwise" -> Just otherwiseFunc -- Always matches
-       | checkStr == "ignore"    -> Just ignoreFunc -- Never matches
+    let alwaysFunc char otherChars world = True in
+    let neverFunc char otherChars world = False in
+    if | checkStr == "always" -> Just alwaysFunc -- Always matches
+       | checkStr == "never"  -> Just neverFunc -- Never matches
        | otherwise -> Nothing -- Failure, syntax error in check string
 
 parseIntent : String -> Maybe Intent
@@ -357,9 +357,9 @@ getIntentWithProgram char otherChars world source =
                     Just intent -> checkForIntent check intent
     in
     let parseLine line = -- Takes a line and gives a Maybe IntentOrSourceError
-        -- Assumes line of format "<check> then <intent>"
-        case String.split " then " line of
-            checkStr :: intentStr :: [] -> 
+        -- Assumes line of format "<intent> when <check>"
+        case String.split " when " line of
+            intentStr :: checkStr :: [] -> 
                 handleCheckAndIntent checkStr intentStr
             _ -> Just (AnErrorOf "A line is missing 'then'")
     in
