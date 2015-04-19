@@ -158,25 +158,28 @@ initialBasicChaotic pos =
 {-  
 A tough but unarmed, immobile friendly base that the player wants to protect
 -}
-initialBase : Position -> Character
-initialBase pos =
+initialBase : Position -> String -> Int -> Character
+initialBase pos name health=
     Good
         { position = pos
-        , health   = 50
+        , health   = health
         , weapon   = Unarmed
         , canMove  = False
-        , label    = "Radar Facility"
+        , label    = name
         }
 
 initialCharacters : Array Character
 initialCharacters =
     fromList
         [ initialBasicEnemy   { x = 5,  y = 5  }
+        , initialBasicChaotic { x = 1,  y = 24 }
         , initialBasicEnemy   { x = 20, y = 5  }
         , initialBasicEnemy   { x = 5,  y = 20 }
-        , initialBase         { x = 12, y = 12 }
+        , initialBase         { x = 12, y = 12 } "Radar Facility" 50
+        , initialBase         { x = 14, y = 23 } "Power Station" 45
         , initialPlayer       { x = 10, y = 8  }
         , initialBasicChaotic { x = 20, y = 20 }
+        , initialBase         { x = 18, y = 7  } "Hospital" 30
         ]
 
 initialPlayer : Position -> Character
