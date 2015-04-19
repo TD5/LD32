@@ -316,8 +316,11 @@ type IntentOrSourceError
 
 parseCheck : String -> Maybe (Character -> Array Character -> World -> Bool)
 parseCheck checkStr = -- Tries to parse a checking function from a string
-    -- TODO
-    Nothing
+    let otherwiseFunc char otherChars world = True in
+    let ignoreFunc char otherChars world = False in
+    if | checkStr == "otherwise" -> Just otherwiseFunc -- Always matches
+       | checkStr == "ignore"    -> Just ignoreFunc -- Never matches
+       | otherwise -> Nothing -- Failure, syntax error in check string
 
 parseIntent : String -> Maybe Intent
 parseIntent intentStr = -- Tries to parse an intent
