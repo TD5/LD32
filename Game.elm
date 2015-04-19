@@ -240,7 +240,7 @@ rotate characters = -- Moves the first element to the back of the queue
     case get 0 characters of
         Nothing -> characters
         Just first ->
-            let n = length characters |> Debug.log "# characters" in
+            let n = length characters in
             let tail = slice 1 n characters in
             push first tail
 
@@ -300,13 +300,12 @@ update : Action -> Model -> Model
 update action model =
     case action of
         ModifySource newSource -> 
-            modifySource newSource model |> Debug.log "Modify source" 
+            modifySource newSource model 
         StartBattle -> 
-            startBattle model |> Debug.log "Start battle" 
+            startBattle model
         StepBattle delta -> 
-            timeStep model |> Debug.log "Step battle" 
-        NoOp -> 
-            model |> Debug.log "NoOp" 
+            timeStep model
+        NoOp -> model
 
 
 ---- VIEW ----
