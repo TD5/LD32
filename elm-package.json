@@ -13,7 +13,6 @@
     "dependencies": {
         "elm-lang/core": "1.1.1 <= v < 2.0.0",
         "evancz/elm-html": "1.0.0 <= v < 2.0.0",
-        "evancz/elm-svg": "1.0.0 <= v < 2.0.0",
-        "Dandandan/parser": "5.0.1 <= v < 6.0.0"
+        "evancz/elm-svg": "1.0.0 <= v < 2.0.0"
     }
 }

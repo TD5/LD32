@@ -11,7 +11,6 @@ goal is to keep as many friendly units alive for as long as possible.
 
 import Array (..)
 import Debug
-import Parser
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
