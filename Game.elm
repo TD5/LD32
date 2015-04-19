@@ -64,6 +64,7 @@ type alias Entity = -- An actor in the gameworld
     , label    : String
     }
 
+-- TODO Put the allegience inside the Entity
 type Character -- An entity with an alignment to a team
     = Player Entity -- Player controlled entities
     | Good Entity -- Won't attack player or other good entities
@@ -77,6 +78,14 @@ getPosition character =
         Good e    -> e.position
         Chaotic e -> e.position
         Evil e    -> e.position
+
+setPosition : Character -> Position -> Character
+setPosition character newPos =
+    case character of
+        Player e  -> Player  { e | position <- newPos }
+        Good e    -> Good    { e | position <- newPos }
+        Chaotic e -> Chaotic { e | position <- newPos }
+        Evil e    -> Evil    { e | position <- newPos }
 
 type alias ExecutingGame =
     { programMemory : ProgramMemory
@@ -223,7 +232,7 @@ getIntentWithProgram char model source =
     AnIntentTo Wait
 
 rotate : Array Character -> Array Character
-rotate characters = -- Moves the first element to the back of the array
+rotate characters = -- Moves the first element to the back of the queue
     case get 0 characters of
         Nothing -> characters
         Just first ->
@@ -240,27 +249,28 @@ move direction position =
         East  -> { position | x <- position.x + 1 }
 
 type UpdatedCharactersOrSourceError
-    = Some Array Character
+    = Some (Array Character)
     | ErrorOf SourceError
 
 resolveIntent : Array Character -> World -> UpdatedCharactersOrSourceError
 resolveIntent characters world =
     case get 0 characters of
         Nothing -> Some characters -- Nothing to do
-        Just nextCharacter ->
-            let intent = getIntentWithAI nextCharacter world in
+        Just thisCharacter ->
+            let thisCharacterPos = getPosition thisCharacter in
+            let intent = getIntentWithAI thisCharacter world in
             case intent of
                 Wait -> Some (rotate characters) -- The character has forfeited their turn
                 Move direction ->
-                    let intendedPosition = (move direction nextCharacter.position) in
+                    let intendedPosition = thisCharacterPos |> move direction in
                     -- TODO Check for collisions with other entities
                     let resultantPosition = 
                         if isInWorld world intendedPosition 
                            then intendedPosition 
-                           else nextCharacter.position 
+                           else thisCharacterPos 
                     in
                     let updatedCharacter = 
-                        { nextCharacter | position <- resultantPosition }
+                        { thisCharacter | position <- resultantPosition }
                     in
                     Some (set 0 updatedCharacter characters |> rotate)
                 Fire direction ->
@@ -370,7 +380,7 @@ viewGameWorld model =
     in
     let characters m =
         case m.executingGame of
-            Nothing -> empty
+            Nothing -> []
             Just eg -> toList eg.characters
     in
     let background =
