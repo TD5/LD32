@@ -1,5 +1,5 @@
 # A Game of Drones
-My entry for Ludum Dare 32 - An Unconventional Weapon
+My entry for [Ludum Dare 32](http://ludumdare.com/compo/2015/04/15/welcome-to-ludum-dare-32/) - Make a game in 48 hours under the theme, "An Unconventional Weapon"
 
 #### Program a drone to defend against the evil attackers. There's no direct control, only the forward-thinking and logic you feed into your program - *this* is your real weapon.
 
@@ -29,3 +29,5 @@ move south when always
 ```
 
 The game is written in [Elm](http://elm-lang.org), using Vim, Elm Reactor and Safari.
+
+This was my first attempt to write something more than a ```Hello World!``` program in Elm. I chose Elm because I wanted a bigger challenge than my last Ludum Dare entry, and what better way than to drop myself in the deep end with a new language and a different programming paradigm? I didn't get very close to finishing the game, but I learnt a lot about Elm, so I consider the exercise a win.
