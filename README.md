@@ -17,10 +17,10 @@ The actions are:
 Example program:
 
 ```
-fire north when enemy isWithin 25 north
-fire south when enemy isWithin 25 south
-fire east when enemy isWithin 25 east
-fire west when enemy isWithin 25
+fire north when enemy isWithin 12 north
+fire south when enemy isWithin 12 south
+fire east when enemy isWithin 12 east
+fire west when enemy isWithin 12 west
 move south when edge isWithin 2 north
 move north when edge isWithin 2 south
 move east when edge isWithin 2 east
