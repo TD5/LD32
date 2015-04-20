@@ -30,4 +30,4 @@ move south when always
 
 The game is written in [Elm](http://elm-lang.org), using Vim, Elm Reactor and Safari.
 
-This was my first attempt to write something more than a ```Hello World!``` program in Elm. I chose Elm because I wanted a bigger challenge than my last Ludum Dare entry, and what better way than to drop myself in the deep end with a new language and a different programming paradigm? I didn't get very close to finishing the game, but I learnt a lot about Elm, so I consider the exercise a win.
+This was my first attempt to write something more than a ```Hello World!``` program in Elm. I chose Elm because I wanted a bigger challenge than my last Ludum Dare entry, and what better way than to drop myself in the deep end with a new language and a different programming paradigm? I didn't get very close to finishing the game (but you can play it anyway [here](http://td5.github.io/LD32/)), but I learnt a lot about Elm, so I consider the exercise a win.
