@@ -1,8 +1,7 @@
 # A Game of Drones
 My entry for Ludum Dare 32 - An Unconventional Weapon
 
-Current game idea:
-Program a drone to defend against the evil attackers. There's no direct control, only the forward-thinking and logic you feed into your program - *this* is your real weapon.
+#### Program a drone to defend against the evil attackers. There's no direct control, only the forward-thinking and logic you feed into your program - *this* is your real weapon.
 
 Each line is an action which your drone will do if the check after the "when" passes. The first line to pass it's check has it's action executed. Each time your drone wants to do something, it will consult your program, and do nothing if none of your rules apply.
 
