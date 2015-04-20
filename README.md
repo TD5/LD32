@@ -1,5 +1,5 @@
 # A Game of Drones
-My entry for [Ludum Dare 32](http://ludumdare.com/compo/2015/04/15/welcome-to-ludum-dare-32/) - Make a game in 48 hours under the theme, "An Unconventional Weapon"
+My entry for [Ludum Dare 32](http://ludumdare.com/compo/ludum-dare-32/?action=preview&uid=39783) - Make a game in 48 hours under the theme, "An Unconventional Weapon"
 
 #### Program a drone to defend against the evil attackers. There's no direct control, only the forward-thinking and logic you feed into your program - *this* is your real weapon.
 
